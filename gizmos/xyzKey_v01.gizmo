@@ -1,0 +1,1019 @@
+#! C:/Program Files/Nuke9.0v8/nuke-9.0.8.dll -nx
+version 9.0 v8
+add_layer {P P.X P.Y P.Z}
+add_layer {N N.X N.Y N.Z}
+Gizmo {
+ inputs 3
+ tile_color 0xff00ff
+ addUserKnob {20 XyZ}
+ addUserKnob {41 in_1 l "in 1" T Shuffle18.in}
+ addUserKnob {26 tt l "" -STARTLINE T ">>> pass Position >>>"}
+ addUserKnob {26 ""}
+ addUserKnob {18 color}
+ color {0 0 0}
+ addUserKnob {6 color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {13 translate l trans +HIDDEN}
+ addUserKnob {22 to_color T "xyzkey= nuke.thisNode()\n\nxyz = xyzkey\['translate'].value()\nrgb=\[]\nfor i in range(3):\n\trgb.append(xyz\[i])\nxyzkey\['color'].setValue(rgb)\nxyzkey\['cons'].setValue(0)\n\nxyzkey\['color'].setEnabled(True)\n\nxyzkey\['translate'].setVisible(False)\nxyzkey\['color'].setVisible(True)\n" +STARTLINE}
+ addUserKnob {22 to_Axs -STARTLINE T "xyzkey= nuke.thisNode()\n\nrgb = xyzkey\['color'].value()\nxyz=\[]\nfor i in range(3):\n\txyz.append(rgb\[i])\nxyzkey\['translate'].setValue(xyz)\nxyzkey\['cons'].setValue(1)\n\nxyzkey\['color'].setEnabled(False)\n\nxyzkey\['color'].setVisible(False)\nxyzkey\['translate'].setVisible(True)\n"}
+ addUserKnob {6 cons -STARTLINE +DISABLED}
+ addUserKnob {26 ""}
+ addUserKnob {41 uniform_scale l "uni sc" T Axis1.uniform_scale}
+ addUserKnob {20 rot_sk n 1}
+ rot_sk 0
+ addUserKnob {41 rotate T Axis1.rotate}
+ addUserKnob {41 scaling l scale T Axis1.scaling}
+ addUserKnob {20 endGrouprot_sk n -1}
+ addUserKnob {26 ""}
+ addUserKnob {6 r_k l "" +STARTLINE +DISABLED +STARTLINE}
+ r_k true
+ addUserKnob {22 ramp_key -STARTLINE T "xyzkey= nuke.thisNode()\n\nxyzkey\['r_k'].setValue(True)\nxyzkey\['s_k'].setValue(False)\nxyzkey\['c_k'].setValue(False)\n\nt = '_______________R_A_M_P_______________'\nxyzkey\['rsc'].setValue(t)\n\nram_sph_cont = \[ 'vec' , 'facet' , 'ramp' ]\nfor i in ram_sph_cont:\n    xyzkey\[i].setVisible(True)\n\ncube_cont = \[ 'x1' , 'x0' , 'facet_X1' , 'facet_X0' , 'ramp_X1' , 'ramp_X0' , 'y1' , 'y0' , 'facet_Y1' , 'facet_Y0' , 'ramp_Y1' , 'ramp_Y0' , 'z1' , 'z0' , 'facet_Z1' , 'facet_Z0' , 'ramp_Z1' , 'ramp_Z0' ]\nfor i in cube_cont:\n    xyzkey\[i].setVisible(False)"}
+ addUserKnob {6 s_k l "" -STARTLINE +DISABLED}
+ addUserKnob {22 spher_key -STARTLINE T "xyzkey= nuke.thisNode()\n\nxyzkey\['r_k'].setValue(False)\nxyzkey\['s_k'].setValue(True)\nxyzkey\['c_k'].setValue(False)\n\nt = '_______________S_P_H_E_R_____________'\nxyzkey\['rsc'].setValue(t)\n\nram_sph_cont = \[ 'vec' , 'facet' , 'ramp' ]\nfor i in ram_sph_cont:\n    xyzkey\[i].setVisible(True)\n\ncube_cont = \[ 'x1' , 'x0' , 'facet_X1' , 'facet_X0' , 'ramp_X1' , 'ramp_X0' , 'y1' , 'y0' , 'facet_Y1' , 'facet_Y0' , 'ramp_Y1' , 'ramp_Y0' , 'z1' , 'z0' , 'facet_Z1' , 'facet_Z0' , 'ramp_Z1' , 'ramp_Z0' ]\nfor i in cube_cont:\n    xyzkey\[i].setVisible(False)"}
+ addUserKnob {6 c_k l "" -STARTLINE +DISABLED}
+ addUserKnob {22 cube_key -STARTLINE T "xyzkey= nuke.thisNode()\n\nxyzkey\['r_k'].setValue(False)\nxyzkey\['s_k'].setValue(False)\nxyzkey\['c_k'].setValue(True)\n\nt = '_______________C_U_B_E_______________'\nxyzkey\['rsc'].setValue(t)\n\nram_sph_cont = \[ 'vec' , 'facet' , 'ramp' ]\nfor i in ram_sph_cont:\n    xyzkey\[i].setVisible(False)\n\ncube_cont = \[ 'x1' , 'x0' , 'facet_X1' , 'facet_X0' , 'ramp_X1' , 'ramp_X0' , 'y1' , 'y0' , 'facet_Y1' , 'facet_Y0' , 'ramp_Y1' , 'ramp_Y0' , 'z1' , 'z0' , 'facet_Z1' , 'facet_Z0' , 'ramp_Z1' , 'ramp_Z0' ]\nfor i in cube_cont:\n    xyzkey\[i].setVisible(True)"}
+ addUserKnob {6 uv_k l "" -STARTLINE +DISABLED}
+ addUserKnob {22 UV_key -STARTLINE T "xyzkey= nuke.thisNode()\n\nif xyzkey\['uv_k'].value() :\n\n\n\txyzkey\['uv_k'].setValue(False)\n\txyzkey\['uu'].setValue('')\n\txyzkey\['uu'].setValue(' is Off')\n\txyzkey\['sc_uv'].setVisible(False)\nelse:\n\n\txyzkey\['uv_k'].setValue(True)\n\txyzkey\['sc_uv'].setVisible(True)\n\txyzkey\['uu'].setValue(' is On')\n\n\tt = '_______________R_A_M_P_______________'\n\txyzkey\['rsc'].setValue(t)\n\n\txyzkey\['r_k'].setValue(True)\n\txyzkey\['s_k'].setValue(False)\n\txyzkey\['c_k'].setValue(False)\n\n\tram_sph_cont = \[ 'vec' , 'facet' , 'ramp' ]\n\tfor i in ram_sph_cont:\n\t    xyzkey\[i].setVisible(True)\n\n\tcube_cont = \[ 'x1' , 'x0' , 'facet_X1' , 'facet_X0' , 'ramp_X1' , 'ramp_X0' , 'y1' , 'y0' , 'facet_Y1' , 'facet_Y0' , 'ramp_Y1' , 'ramp_Y0' , 'z1' , 'z0' , 'facet_Z1' , 'facet_Z0' , 'ramp_Z1' , 'ramp_Z0' ]\n\tfor i in cube_cont:\n\t    xyzkey\[i].setVisible(False)"}
+ addUserKnob {26 uu l "" -STARTLINE T " is Off"}
+ addUserKnob {26 ""}
+ addUserKnob {26 rsc l "" +STARTLINE T _______________R_A_M_P_______________}
+ addUserKnob {6 inv l invert -STARTLINE}
+ addUserKnob {4 vec M {x y z ""}}
+ vec y
+ addUserKnob {7 facet}
+ addUserKnob {7 ramp R -1 1}
+ ramp 0.2
+ addUserKnob {14 sc_uv +HIDDEN R 0 100}
+ sc_uv 1
+ addUserKnob {6 x1 l "" +STARTLINE +HIDDEN +STARTLINE}
+ x1 true
+ addUserKnob {7 facet_X1 l "facet +X" -STARTLINE +HIDDEN}
+ addUserKnob {7 ramp_X1 l "ramp +X" -STARTLINE +HIDDEN}
+ ramp_X1 0.2
+ addUserKnob {6 x0 l "" +STARTLINE +HIDDEN +STARTLINE}
+ x0 true
+ addUserKnob {7 facet_X0 l "facet --X" -STARTLINE +HIDDEN}
+ addUserKnob {7 ramp_X0 l "ramp --X" -STARTLINE +HIDDEN}
+ ramp_X0 0.2
+ addUserKnob {6 y1 l "" +STARTLINE +HIDDEN +STARTLINE}
+ y1 true
+ addUserKnob {7 facet_Y1 l "facet +Y" -STARTLINE +HIDDEN}
+ addUserKnob {7 ramp_Y1 l "ramp +Y" -STARTLINE +HIDDEN}
+ ramp_Y1 0.2
+ addUserKnob {6 y0 l "" +STARTLINE +HIDDEN +STARTLINE}
+ y0 true
+ addUserKnob {7 facet_Y0 l "facet --Y" -STARTLINE +HIDDEN}
+ addUserKnob {7 ramp_Y0 l "ramp --Y" -STARTLINE +HIDDEN}
+ ramp_Y0 0.2
+ addUserKnob {6 z1 l "" +STARTLINE +HIDDEN +STARTLINE}
+ z1 true
+ addUserKnob {7 facet_Z1 l "facet +Z" -STARTLINE +HIDDEN}
+ addUserKnob {7 ramp_Z1 l "ramp +Z" -STARTLINE +HIDDEN}
+ ramp_Z1 0.2
+ addUserKnob {6 z0 l "" +STARTLINE +HIDDEN +STARTLINE}
+ z0 true
+ addUserKnob {7 facet_Z0 l "facet --Z" -STARTLINE +HIDDEN}
+ addUserKnob {7 ramp_Z0 l "ramp --Z" -STARTLINE +HIDDEN}
+ ramp_Z0 0.2
+ addUserKnob {20 Smuz}
+ addUserKnob {3 aa l Anti-Aliasing}
+ addUserKnob {7 soften}
+ addUserKnob {26 ""}
+ addUserKnob {41 disable_1 l disable T ColorLookup1.disable}
+ addUserKnob {20 sm n 1}
+ sm 0
+ addUserKnob {41 lut l "" +STARTLINE T ColorLookup1.lut}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 Norm}
+ addUserKnob {6 n_k +STARTLINE}
+ addUserKnob {41 in l "in 1" T Shuffle11.in}
+ addUserKnob {26 norm_t l "" -STARTLINE T "<<< pass Normal <<<"}
+ addUserKnob {6 inv_norm +STARTLINE}
+ addUserKnob {41 facet_2 l facet T NoOp1.facet}
+ addUserKnob {41 ramp_2 l ramp T NoOp1.ramp}
+ addUserKnob {41 mix T Merge8.mix}
+ addUserKnob {26 ""}
+ addUserKnob {41 disable_2 l disable T ColorLookup2.disable}
+ addUserKnob {20 sm_norm n 1}
+ sm_norm 0
+ addUserKnob {41 lut_1 l "" -STARTLINE T ColorLookup2.lut}
+ addUserKnob {20 endGroupsm_norm n -1}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -283
+  ypos -463
+ }
+ Dot {
+  name Dot27
+  xpos -249
+  ypos -129
+ }
+set Nfce58800 [stack 0]
+ Matrix {
+  matrix {
+      {{parent.aa-1} {matrix.0>0?matrix.0*2:1} {matrix.0}}
+      {{matrix.1} {matrix.1*2} {matrix.1}}
+      {{matrix.0} {matrix.1} {matrix.0}}
+    }
+  normalize true
+  name fakeAA_matrix1
+  xpos -147
+  ypos -138
+  disable {{parent.aa==0 x1 1}}
+ }
+ Dot {
+  name Dot28
+  xpos 2366
+  ypos -129
+ }
+ Shuffle {
+  in N
+  name Shuffle11
+  xpos 2332
+  ypos 156
+ }
+ ColorMatrix {
+  matrix {
+      {{parent.Axis1.world_matrix.0} {parent.Axis1.world_matrix.1} {parent.Axis1.world_matrix.2}}
+      {{parent.Axis1.world_matrix.4} {parent.Axis1.world_matrix.5} {parent.Axis1.world_matrix.6}}
+      {{parent.Axis1.world_matrix.8} {parent.Axis1.world_matrix.9} {parent.Axis1.world_matrix.10}}
+    }
+  invert true
+  name ColorMatrix2
+  xpos 2332
+  ypos 180
+ }
+ Expression {
+  expr0 r*sqrt(m00*m00+m01*m01+m02*m02)
+  expr1 g*sqrt(m03*m03+m04*m04+m05*m05)
+  expr2 b*sqrt(m06*m06+m07*m07+m08*m08)
+  name matr_scale
+  xpos 2332
+  ypos 204
+  addUserKnob {20 User}
+  addUserKnob {7 m00}
+  m00 {{input.matrix.0}}
+  addUserKnob {7 m01}
+  m01 {{input.matrix.1}}
+  addUserKnob {7 m02}
+  m02 {{input.matrix.2}}
+  addUserKnob {7 m03}
+  m03 {{input.matrix.3}}
+  addUserKnob {7 m04}
+  m04 {{input.matrix.4}}
+  addUserKnob {7 m05}
+  m05 {{input.matrix.5}}
+  addUserKnob {7 m06}
+  m06 {{input.matrix.6}}
+  addUserKnob {7 m07}
+  m07 {{input.matrix.7}}
+  addUserKnob {7 m08}
+  m08 {{input.matrix.8}}
+ }
+ Shuffle {
+  alpha red
+  name Shuffle13
+  xpos 2332
+  ypos 273
+ }
+set N52502c00 [stack 0]
+ Shuffle {
+  alpha green
+  name Shuffle15
+  xpos 2442
+  ypos 273
+ }
+set N52502800 [stack 0]
+ Shuffle {
+  alpha blue
+  name Shuffle16
+  xpos 2552
+  ypos 273
+ }
+push $N52502800
+push $N52502c00
+ Switch {
+  inputs 3
+  which {{parent.vec}}
+  name Switch7
+  xpos 2552
+  ypos 313
+ }
+ Expression {
+  expr3 -a
+  name Ex_invert
+  xpos 2332
+  ypos 313
+  disable {{1-parent.NoOp2.inv}}
+ }
+ Expression {
+  expr3 -a
+  name Ex_inv_norm
+  xpos 2332
+  ypos 337
+  disable {{1-inv_norm}}
+ }
+ Expression {
+  temp_name0 rr
+  temp_expr0 ramp<0?0:1
+  temp_name1 ff
+  temp_expr1 NoOp1.facet
+  temp_name2 ramp
+  temp_expr2 NoOp1.ramp
+  temp_name3 dd
+  temp_expr3 a
+  expr2 "(ramp<0?0:1)+(ramp<0 ? 1:-1)"
+  expr3 "(ramp<0?1:0)+(ramp<0 ? -1:1)*clamp( (dd-(ff))/ramp)"
+  name Expression3
+  xpos 2332
+  ypos 434
+ }
+ ColorLookup {
+  lut {master {}
+    red {}
+    green {}
+    blue {}
+    alpha {curve L 0 1}}
+  name ColorLookup2
+  xpos 2332
+  ypos 458
+  disable true
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle14
+  xpos 2332
+  ypos 496
+ }
+ Dot {
+  name Dot29
+  xpos 2366
+  ypos 911
+ }
+ Dot {
+  name Dot10
+  xpos 563
+  ypos 911
+ }
+set N522f9800 [stack 0]
+ Shuffle {
+  red black
+  green black
+  blue alpha
+  alpha black
+  name Shuffle12
+  xpos 529
+  ypos 963
+ }
+push $Nfce58800
+ Shuffle {
+  in P
+  name Shuffle18
+  xpos -283
+  ypos -68
+ }
+ Dot {
+  name Dot1
+  xpos -249
+  ypos 11
+ }
+set N522f8c00 [stack 0]
+ Matrix {
+  matrix {
+      {{parent.aa-1} {matrix.0>0?matrix.0*2:1} {matrix.0}}
+      {{matrix.1} {matrix.1*2} {matrix.1}}
+      {{matrix.0} {matrix.1} {matrix.0}}
+    }
+  normalize true
+  name fakeAA_matrix
+  xpos -139
+  ypos 2
+  disable {{parent.aa==0 x1 1}}
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color {{parent.Axis1.world_matrix.3} {parent.Axis1.world_matrix.7} {parent.Axis1.world_matrix.11} 0}
+  name Constant2
+  xpos 199
+  ypos -88
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color {{parent.color} {parent.color} {parent.color} 0}
+  name Constant1
+  xpos 320
+  ypos -40
+ }
+ Switch {
+  inputs 2
+  which {{parent.cons}}
+  name Sw_cons
+  xpos 199
+  ypos -16
+ }
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge1
+  xpos 199
+  ypos 8
+ }
+ ColorMatrix {
+  matrix {
+      {{parent.Axis1.world_matrix.0} {parent.Axis1.world_matrix.1} {parent.Axis1.world_matrix.2}}
+      {{parent.Axis1.world_matrix.4} {parent.Axis1.world_matrix.5} {parent.Axis1.world_matrix.6}}
+      {{parent.Axis1.world_matrix.8} {parent.Axis1.world_matrix.9} {parent.Axis1.world_matrix.10}}
+    }
+  invert true
+  name ColorMatrix1
+  xpos 199
+  ypos 32
+ }
+ Dot {
+  name Dot2
+  xpos 233
+  ypos 157
+ }
+set N6d54b000 [stack 0]
+ Shuffle {
+  alpha red
+  name Shuffle3
+  xpos 199
+  ypos 188
+ }
+set N6d54ac00 [stack 0]
+ Shuffle {
+  alpha green
+  name Shuffle7
+  xpos 309
+  ypos 188
+ }
+set N6d54a800 [stack 0]
+ Shuffle {
+  alpha blue
+  name Shuffle1
+  xpos 419
+  ypos 188
+ }
+push $N6d54a800
+ Dot {
+  name Dot15
+  xpos 343
+  ypos 212
+ }
+push $N6d54ac00
+ Dot {
+  name Dot14
+  xpos 233
+  ypos 252
+ }
+ Switch {
+  inputs 3
+  which {{parent.vec}}
+  name Switch3
+  xpos 419
+  ypos 249
+ }
+ Expression {
+  temp_name0 rr
+  temp_expr0 ramp<0?0:1
+  temp_name1 ff
+  temp_expr1 NoOp2.facet*1000
+  temp_name2 ramp
+  temp_expr2 NoOp2.ramp*1000
+  temp_name3 dd
+  temp_expr3 a
+  expr3 "(ramp<0?0:1)+(ramp<0 ? 1:-1)*clamp( (dd-(ff))/ramp)"
+  name Expression1
+  xpos 419
+  ypos 273
+ }
+ Invert {
+  channels alpha
+  name Invert1
+  xpos 419
+  ypos 297
+  disable {{1-parent.NoOp2.inv}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle5
+  xpos 419
+  ypos 333
+ }
+push 0
+ Switch {
+  inputs 2
+  which {{parent.r_k}}
+  name Switch2
+  xpos 419
+  ypos 439
+ }
+push 0
+push $N6d54b000
+ Dot {
+  name Dot9
+  xpos 843
+  ypos 157
+ }
+set N100fa000 [stack 0]
+ Expression {
+  temp_name0 rr
+  temp_expr0 ramp<0?0:1
+  temp_name1 ff
+  temp_expr1 NoOp2.facet*1000
+  temp_name2 ramp
+  temp_expr2 NoOp2.ramp*1000
+  temp_name3 dd
+  temp_expr3 "sqrt(r*r + g*g + b*b)"
+  expr3 "(ramp<0?0:1)+(ramp<0 ? 1:-1)*clamp( (dd-(ff))/ramp)"
+  name Expression4
+  xpos 809
+  ypos 273
+ }
+ Invert {
+  channels alpha
+  name Invert2
+  xpos 809
+  ypos 297
+  disable {{1-parent.NoOp2.inv}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle2
+  xpos 809
+  ypos 330
+ }
+ Clamp {
+  name Clamp1
+  xpos 809
+  ypos 354
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle4
+  xpos 809
+  ypos 390
+ }
+push 0
+ Switch {
+  inputs 2
+  which {{parent.s_k}}
+  name Switch4
+  xpos 809
+  ypos 483
+ }
+ Dot {
+  name Dot25
+  xpos 843
+  ypos 507
+ }
+push $N100fa000
+ Dot {
+  name Dot6
+  xpos 1244
+  ypos 157
+ }
+set N57673c00 [stack 0]
+ Expression {
+  temp_name0 A1
+  temp_expr0 "clamp( NoOp3.x1*(1-( r-NoOp3.facet_X1*1000 )/(NoOp3.ramp_X1*1000)) )"
+  temp_name1 A0
+  temp_expr1 "clamp( NoOp3.x0*(1+( r+NoOp3.facet_X0*1000 )/(NoOp3.ramp_X0*1000)) )"
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 "NoOp3.x1 ? clamp( A1 ) : 1"
+  name ExpX1
+  xpos 1210
+  ypos 175
+ }
+push $N57673c00
+ Dot {
+  name Dot4
+  xpos 1304
+  ypos 157
+ }
+set N57673000 [stack 0]
+ Expression {
+  temp_name0 A1
+  temp_expr0 "clamp( NoOp3.x1*(1-( r-NoOp3.facet_X1*1000 )/(NoOp3.ramp_X1*1000)) )"
+  temp_name1 A0
+  temp_expr1 "clamp( NoOp3.x0*(1+( r+NoOp3.facet_X0*1000 )/(NoOp3.ramp_X0*1000)) )"
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 "NoOp3.x0 ? clamp( A0 ) : 1"
+  name ExpX
+  xpos 1270
+  ypos 236
+ }
+push $N57673000
+ Dot {
+  name Dot7
+  xpos 1361
+  ypos 157
+ }
+set N57672400 [stack 0]
+ Expression {
+  temp_name0 A1
+  temp_expr0 "clamp( NoOp3.y1*(1-( g-NoOp3.facet_Y1*1000 )/(NoOp3.ramp_Y1*1000)) )"
+  temp_name1 A0
+  temp_expr1 "clamp( NoOp3.y0*(1+( g+NoOp3.facet_Y0*1000 )/(NoOp3.ramp_Y0*1000)) )"
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 "NoOp3.y1 ? clamp( A1 ) : 1"
+  name ExpY1
+  xpos 1327
+  ypos 296
+ }
+push $N57672400
+ Dot {
+  name Dot3
+  xpos 1415
+  ypos 157
+ }
+set N26353800 [stack 0]
+ Expression {
+  temp_name0 A1
+  temp_expr0 "clamp( NoOp3.y1*(1-( g-NoOp3.facet_Y1*1000 )/(NoOp3.ramp_Y1*1000)) )"
+  temp_name1 A0
+  temp_expr1 "clamp( NoOp3.y0*(1+( g+NoOp3.facet_Y0*1000 )/(NoOp3.ramp_Y0*1000)) )"
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 "NoOp3.y0 ? clamp( A0 ) : 1"
+  name ExpY
+  xpos 1381
+  ypos 356
+ }
+push 0
+push $N26353800
+ Dot {
+  name Dot8
+  xpos 1467
+  ypos 157
+ }
+set N26352c00 [stack 0]
+ Expression {
+  temp_name0 A1
+  temp_expr0 "clamp( NoOp3.z1*(1-( b-NoOp3.facet_Z1*1000 )/(NoOp3.ramp_Z1*1000)) )"
+  temp_name1 A0
+  temp_expr1 "clamp( NoOp3.z0*(1+( b+NoOp3.facet_Z0*1000 )/(NoOp3.ramp_Z0*1000)) )"
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 "NoOp3.z1 ? clamp( A1 ) : 1"
+  name ExpZ1
+  xpos 1433
+  ypos 417
+ }
+push $N26352c00
+ Dot {
+  name Dot5
+  xpos 1521
+  ypos 157
+ }
+set N26352000 [stack 0]
+ Expression {
+  temp_name0 A1
+  temp_expr0 "clamp( NoOp3.z1*(1-( b-NoOp3.facet_Z1*1000 )/(NoOp3.ramp_Z1*1000)) )"
+  temp_name1 A0
+  temp_expr1 "clamp( NoOp3.z0*(1+( b+NoOp3.facet_Z0*1000 )/(NoOp3.ramp_Z0*1000)) )"
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 "NoOp3.z0 ? clamp( A0 ) : 1"
+  name ExpZ
+  xpos 1487
+  ypos 476
+ }
+ Merge2 {
+  inputs 6+1
+  operation multiply
+  name Merge3
+  xpos 1210
+  ypos 476
+ }
+ Invert {
+  channels alpha
+  name Invert3
+  xpos 1210
+  ypos 500
+  disable {{1-parent.NoOp2.inv}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle6
+  xpos 1210
+  ypos 536
+ }
+push 0
+ Switch {
+  inputs 2
+  which {{parent.c_k}}
+  name Switch5
+  xpos 1210
+  ypos 560
+ }
+ Dot {
+  name Dot24
+  xpos 1244
+  ypos 611
+ }
+ Merge2 {
+  inputs 3+1
+  name Merge2
+  xpos 419
+  ypos 608
+ }
+ ColorLookup {
+  lut {master {}
+    red {}
+    green {}
+    blue {}
+    alpha {curve C k 0 s0 L 1 s0}}
+  name ColorLookup1
+  xpos 419
+  ypos 632
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle17
+  xpos 419
+  ypos 656
+ }
+set Nb9381800 [stack 0]
+push $N26352000
+ Dot {
+  name Dot12
+  xpos 1959
+  ypos 157
+ }
+set Nb9381400 [stack 0]
+ Dot {
+  name Dot17
+  xpos 2053
+  ypos 157
+ }
+set Nb9381000 [stack 0]
+ Dot {
+  name Dot16
+  xpos 2144
+  ypos 157
+ }
+ Shuffle {
+  red green
+  green blue
+  blue red
+  name Shuffle10
+  xpos 2110
+  ypos 195
+ }
+push $Nb9381000
+ Shuffle {
+  name Shuffle8
+  xpos 2019
+  ypos 196
+ }
+push $Nb9381400
+ Shuffle {
+  red green
+  green red
+  name Shuffle9
+  xpos 1925
+  ypos 194
+ }
+ Switch {
+  inputs 3
+  which {{parent.vec}}
+  name Switch1
+  xpos 2110
+  ypos 244
+ }
+ Expression {
+  temp_name0 w
+  temp_expr0 NoOp4.sc_uv.w
+  temp_name1 h
+  temp_expr1 NoOp4.sc_uv.h
+  expr0 r/w
+  expr2 b/h
+  name Expression6
+  xpos 2110
+  ypos 379
+ }
+ Expression {
+  temp_name0 x
+  temp_expr0 (r)*0.005+0.5
+  temp_name1 y
+  temp_expr1 (-b)*0.005+0.5
+  temp_name2 xx
+  temp_expr2 "clamp( x <= 1 ? x >=-1 ?  x : 0 : 0 )"
+  temp_name3 yy
+  temp_expr3 "clamp( y <= 1 ? y >=-1 ?  y : 0 : 0 )"
+  expr0 "yy ? xx:0"
+  expr1 "xx ? yy:0"
+  expr2 0
+  name Expression2
+  xpos 2110
+  ypos 524
+ }
+set N2955d000 [stack 0]
+ Dot {
+  name Dot26
+  xpos 2144
+  ypos 578
+ }
+set N2955c800 [stack 0]
+ Dot {
+  name Dot13
+  xpos 2144
+  ypos 793
+ }
+ ShuffleCopy {
+  inputs 2
+  name ShuffleCopy3
+  xpos 419
+  ypos 789
+ }
+ Dot {
+  name Dot33
+  xpos 453
+  ypos 899
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge7
+  xpos 419
+  ypos 963
+ }
+ Dot {
+  name Dot34
+  xpos 453
+  ypos 1064
+ }
+push $N522f9800
+push $Nb9381800
+ Dot {
+  name Dot23
+  xpos 336
+  ypos 660
+ }
+set N57527000 [stack 0]
+push $N2955c800
+ Dot {
+  name Dot30
+  xpos 2082
+  ypos 578
+ }
+ Expression {
+  expr3 "r ? 1:0"
+  name Expression7
+  xpos 2048
+  ypos 601
+ }
+ Dot {
+  name Dot35
+  xpos 2082
+  ypos 657
+ }
+push $N2955d000
+ Input {
+  inputs 0
+  name masc_uv
+  xpos -81
+  ypos -512
+  number 2
+ }
+ Dot {
+  name Dot18
+  xpos -47
+  ypos -163
+ }
+ Dot {
+  name Dot19
+  xpos 1898
+  ypos -163
+ }
+ Dot {
+  name Dot20
+  xpos 1898
+  ypos 527
+ }
+ STMap {
+  inputs 2
+  uv rgb
+  name STMap1
+  xpos 2000
+  ypos 518
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  name Merge6
+  xpos 2000
+  ypos 654
+ }
+ Dot {
+  name Dot22
+  xpos 2034
+  ypos 707
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  name Merge5
+  xpos 302
+  ypos 704
+ }
+push $N57527000
+ Dot {
+  name Dot11
+  xpos 226
+  ypos 660
+ }
+ Switch {
+  inputs 2
+  which {{parent.uv_k}}
+  name Switch6
+  xpos 192
+  ypos 704
+ }
+ Dot {
+  name Dot31
+  xpos 226
+  ypos 875
+ }
+set N332f5400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation mask
+  name Merge8
+  xpos 192
+  ypos 908
+ }
+ Dot {
+  name Dot21
+  xpos 226
+  ypos 994
+ }
+push $N332f5400
+ Dot {
+  name Dot32
+  xpos 127
+  ypos 875
+ }
+ Switch {
+  inputs 2
+  which {{parent.n_k}}
+  name Switch8
+  xpos 93
+  ypos 991
+ }
+ Soften {
+  channels rgba
+  amount {{parent.soften}}
+  size 2
+  name Soften1
+  xpos -173
+  ypos 991
+ }
+push $N522f8c00
+ ShuffleCopy {
+  inputs 2
+  name ShuffleCopy1
+  xpos -283
+  ypos 991
+ }
+add_layer {_xyz_UV _xyz_UV.red _xyz_UV.green _xyz_UV.blue _xyz_UV.alpha}
+ ShuffleCopy {
+  inputs 2
+  red red
+  green green
+  blue blue
+  out _xyz_UV
+  name ShuffleCopy2
+  xpos -283
+  ypos 1060
+ }
+set N5d151800 [stack 0]
+ Output {
+  name Output1
+  xpos -283
+  ypos 1164
+ }
+ Input {
+  inputs 0
+  name axi
+  xpos -184
+  ypos -490
+  number 1
+ }
+ Axis2 {
+  translate {{parent.translate} {parent.translate} {parent.translate}}
+  name Axis1
+  xpos -174
+  ypos -222
+ }
+ NoOp {
+  inputs 0
+  name NoOp2
+  xpos 586
+  ypos 234
+  addUserKnob {20 User}
+  addUserKnob {6 inv +STARTLINE}
+  inv {{parent.inv}}
+  addUserKnob {7 facet}
+  facet {{parent.facet}}
+  addUserKnob {7 ramp -STARTLINE R -1 1}
+  ramp {{parent.ramp}}
+ }
+ NoOp {
+  inputs 0
+  name NoOp3
+  xpos 1561
+  ypos 226
+  addUserKnob {20 User}
+  addUserKnob {6 x1 l "" +STARTLINE +STARTLINE}
+  x1 {{parent.x1}}
+  addUserKnob {7 facet_X1 l "facet +X" -STARTLINE}
+  facet_X1 {{parent.facet_X1}}
+  addUserKnob {7 ramp_X1 l "ramp +x" -STARTLINE}
+  ramp_X1 {{parent.ramp_X1}}
+  addUserKnob {6 x0 l "" +STARTLINE +STARTLINE}
+  x0 {{parent.x0}}
+  addUserKnob {7 facet_X0 l "facet --X" -STARTLINE}
+  facet_X0 {{parent.facet_X0}}
+  addUserKnob {7 ramp_X0 l "ramp --x" -STARTLINE}
+  ramp_X0 {{parent.ramp_X0}}
+  addUserKnob {6 y1 l "" +STARTLINE +STARTLINE}
+  y1 {{parent.y1}}
+  addUserKnob {7 facet_Y1 l "facet +Y" -STARTLINE}
+  facet_Y1 {{parent.facet_Y1}}
+  addUserKnob {7 ramp_Y1 l "ramp +y" -STARTLINE}
+  ramp_Y1 {{parent.ramp_Y1}}
+  addUserKnob {6 y0 l "" +STARTLINE +STARTLINE}
+  y0 {{parent.y0}}
+  addUserKnob {7 facet_Y0 l "facet --Y" -STARTLINE}
+  facet_Y0 {{parent.facet_Y0}}
+  addUserKnob {7 ramp_Y0 l "ramp --y" -STARTLINE}
+  ramp_Y0 {{parent.ramp_Y0}}
+  addUserKnob {6 z1 l "" +STARTLINE +STARTLINE}
+  z1 {{parent.z1}}
+  addUserKnob {7 facet_Z1 l "facet +Z" -STARTLINE}
+  facet_Z1 {{parent.facet_Z1}}
+  addUserKnob {7 ramp_Z1 l "ramp +z" -STARTLINE}
+  ramp_Z1 {{parent.ramp_Z1}}
+  addUserKnob {6 z0 l "" +STARTLINE +STARTLINE}
+  z0 {{parent.z0}}
+  addUserKnob {7 facet_Z0 l "facet --Z" -STARTLINE}
+  facet_Z0 {{parent.facet_Z0}}
+  addUserKnob {7 ramp_Z0 l "ramp --z" -STARTLINE}
+  ramp_Z0 {{parent.ramp_Z0}}
+ }
+ NoOp {
+  inputs 0
+  name NoOp4
+  xpos 1986
+  ypos 381
+  addUserKnob {20 User}
+  addUserKnob {14 sc_uv R 0 100}
+  sc_uv {{parent.sc_uv} {parent.sc_uv}}
+ }
+ NoOp {
+  inputs 0
+  name NoOp1
+  xpos 2486
+  ypos 433
+  addUserKnob {20 User}
+  addUserKnob {6 inv +STARTLINE}
+  addUserKnob {7 facet}
+  addUserKnob {7 ramp -STARTLINE R -1 1}
+  ramp 1
+ }
+push $N5d151800
+ Viewer {
+  frame_range 1-55
+  fps 25
+  name Viewer1
+  xpos 2000
+  ypos 868
+ }
+end_group

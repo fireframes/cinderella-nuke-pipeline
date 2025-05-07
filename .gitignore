@@ -1,0 +1,11 @@
+# Exclude all JSON files except the template
+*.json
+!cinderella_config_template.json
+
+# Exclude directories
+**/tests/
+**/.idea/
+
+
+# Other exclusions
+cinderella_config.py
