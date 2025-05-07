@@ -6,6 +6,8 @@
 **/tests/
 **/.idea/
 
-
 # Other exclusions
 cinderella_config.py
+
+# Maybe add later
+gizmos/
