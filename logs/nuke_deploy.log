@@ -1,0 +1,7 @@
+[2025-05-08 23:48:30] Starting deployment process from WSL
+[2025-05-08 23:48:30] Current branch: master
+[2025-05-08 23:48:30] Target directory: /mnt/o/tools/nuke
+[2025-05-08 23:48:31] Created temporary directory: /tmp/tmp.3DgCShGqdI
+[2025-05-08 23:48:31] Created version information file
+[2025-05-08 23:48:33] SUCCESS: Deployed master to /mnt/o/tools/nuke
+[2025-05-08 23:48:33] Cleaned up temporary directory

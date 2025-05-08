@@ -20,6 +20,6 @@ m.addCommand("Open Shot Manager", "shot_manager.show_panel()")
 
 
 # Add keyboard shortcut
-nuke_menu.addCommand("Tools/Project Manager", "shot_manager.show_panel()", "F5")
-nuke_menu.addCommand("Tools/Auto Write", "tools.auto_write.update_write_path()", "F3")
-nuke_menu.addCommand("Tools/Reload Read Nodes", "tools.workflow_tools.reload_read_nodes()", "shift+D")
+nuke_menu.addCommand("Studio_Tools/Project Manager", "shot_manager.show_panel()", "F5")
+nuke_menu.addCommand("Studio_Tools/Auto Write", "tools.auto_write.update_write_path()", "F3")
+nuke_menu.addCommand("Studio_Tools/Reload Read Nodes", "tools.workflow_tools.reload_read_nodes()", "shift+D")
