@@ -9,5 +9,9 @@
 # Other exclusions
 cinderella_config.py
 
-# Maybe add later
-gizmos/
+# Maybe later
+~gizmos
+~toolsets
+
+# Python cache
+*.pyc
