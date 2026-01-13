@@ -30,10 +30,8 @@ def get_file_hash(filepath):
         return None
 
 def get_recently_changed_files():
-    comparison_target = "origin/master" 
-    
     result = subprocess.run(
-        ["git", "diff", "--name-status", "--find-renames", comparison_target, "HEAD"],
+        ["git", "diff", "--name-status", "--find-renames", "HEAD^", "HEAD"],
         capture_output=True,
         text=True
     )
