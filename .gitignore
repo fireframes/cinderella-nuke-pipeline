@@ -1,8 +1,8 @@
 # Exclude .venv
 .venv
 
-# Exclude all JSON files
 *.json
+*.log
 
 # Exclude directories
 **/tests/
