@@ -1,0 +1,114 @@
+#! C:/Program Files/Nuke14.0v1/nuke-14.0.1.dll -nx
+version 14.0 v1
+Gizmo {
+ inputs 2
+ addUserKnob {20 User}
+ addUserKnob {4 ToneMapSelector l "Tone Mapper" M {"Tone Mapper 1" "Tone Mapper 2" "Tone Mapper 3" ""}}
+ addUserKnob {26 TMC1 l "Tone Mapper 1 Controls"}
+ addUserKnob {41 t1LwMax l LMax T Tonemap1.t1LwMax}
+ addUserKnob {41 maskChannelMask l mask T Tonemap1.maskChannelMask}
+ addUserKnob {41 invert_mask l invert -STARTLINE T Tonemap1.invert_mask}
+ addUserKnob {26 TMC2 l "Tone Mapper 2 Controls"}
+ addUserKnob {41 t2imgKey l imgKey T ToneMap2.t2imgKey}
+ addUserKnob {41 t2AvLum l AvLum T ToneMap2.t2AvLum}
+ addUserKnob {41 maskChannelMask_1 l mask T ToneMap2.maskChannelMask}
+ addUserKnob {41 invert_mask_1 l invert -STARTLINE T ToneMap2.invert_mask}
+ addUserKnob {26 TMC3 l "Tone Mapper 3 Controls"}
+ addUserKnob {41 ldmax l LdMax T Tonemap3.ldmax}
+ addUserKnob {41 lwmax l LMax T Tonemap3.lwmax}
+ addUserKnob {41 biasss l Bias T Tonemap3.biasss}
+ addUserKnob {41 maskChannelMask_2 l mask T Tonemap3.maskChannelMask}
+ addUserKnob {41 invert_mask_2 l invert -STARTLINE T Tonemap3.invert_mask}
+}
+ Input {
+  inputs 0
+  name Mask
+  xpos -287
+  ypos -460
+  number 1
+ }
+set N550bfc00 [stack 0]
+ Input {
+  inputs 0
+  name Input1
+  xpos -56
+  ypos -465
+ }
+set N53e6a000 [stack 0]
+ Expression {
+  inputs 1+1
+  temp_name0 t3aaa
+  temp_expr0 (ldmax*0.01)/log10(lwmax+1)
+  temp_name1 Lo
+  temp_expr1 r*0.299+g*0.587*b*0.114
+  temp_name2 rtemp
+  temp_expr2 "log(Lo+1) / log(2 + (pow(Lo/lwmax, log(biasss)/log(0.5))) * 8 )"
+  temp_name3 Ln
+  temp_expr3 t3aaa*rtemp
+  expr0 Lo==0?0:r/Lo*Ln
+  expr1 Lo==0?0:g/Lo*Ln
+  expr2 Lo==0?0:b/Lo*Ln
+  name Tonemap3
+  xpos 92
+  ypos -279
+  addUserKnob {20 User}
+  addUserKnob {7 ldmax R 0 5}
+  ldmax 5
+  addUserKnob {7 lwmax R 0 5}
+  lwmax 1
+  addUserKnob {7 biasss R 0 5}
+  biasss 1.03
+ }
+push $N550bfc00
+push $N53e6a000
+ Expression {
+  inputs 1+1
+  temp_name0 t2expos
+  temp_expr0 t2imgKey/t2AvLum
+  temp_name1 Lo
+  temp_expr1 r*0.299+g*0.587*b*0.114
+  temp_name2 Ln
+  temp_expr2 1-exp(-t2expos*Lo)
+  expr0 Lo==0?0:r/Lo*Ln
+  expr1 Lo==0?0:g/Lo*Ln
+  expr2 Lo==0?0:b/Lo*Ln
+  name ToneMap2
+  xpos -56
+  ypos -276
+  addUserKnob {20 User}
+  addUserKnob {7 t2imgKey}
+  t2imgKey 0.5
+  addUserKnob {7 t2AvLum}
+  t2AvLum 0.5
+ }
+push $N550bfc00
+push $N53e6a000
+ Expression {
+  inputs 1+1
+  temp_name0 Lo
+  temp_expr0 r*0.299+g*0.587*b*0.114
+  temp_name1 Ln
+  temp_expr1 log(Lo+1)/log(t1LwMax+1)
+  expr0 Lo==0?0:r/Lo*Ln
+  expr1 Lo==0?0:g/Lo*Ln
+  expr2 Lo==0?0:b/Lo*Ln
+  name Tonemap1
+  xpos -193
+  ypos -275
+  addUserKnob {20 User}
+  addUserKnob {7 t1LwMax R 0 5}
+  t1LwMax 2
+ }
+ Switch {
+  inputs 3
+  which {{parent.ToneMapSelector i}}
+  name Switch1
+  xpos -56
+  ypos -167
+ }
+ Output {
+  name Output1
+  xpos -56
+  ypos -64
+ }
+end_group

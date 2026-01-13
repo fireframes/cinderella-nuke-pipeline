@@ -1,0 +1,238 @@
+#! C:/Program Files/Nuke14.0v1/nuke-14.0.1.dll -nx
+#write_info MOV file:"//192.168.99.202/prj/cinderella/render/ep99/sq99/sh099/comp/mov/ep99_sq99_sh099_precomp.mov" format:"2048 858 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 100" fps:"0" colorspace:"color_picking	color_picking (Output - sRGB)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"OCIO"
+version 14.0 v1
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="0" w="1917" h="1008" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <splitter orientation="1">
+                <split size="40"/>
+                <dock id="" activePageId="Toolbar.1">
+                    <page id="Toolbar.1"/>
+                </dock>
+            </splitter>
+            <split size="1873" stretch="1"/>
+            <splitter orientation="1">
+                <split size="947"/>
+                <splitter orientation="2">
+                    <split size="793"/>
+                    <dock id="" activePageId="Viewer.1">
+                        <page id="Viewer.1"/>
+                    </dock>
+                    <split size="173"/>
+                    <dock id="" activePageId="DopeSheet.1">
+                        <page id="Curve Editor.1"/>
+                        <page id="DopeSheet.1"/>
+                    </dock>
+                </splitter>
+                <split size="922"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                </dock>
+            </splitter>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name O:/tools/nuke/templates/template_light_precomp.nk
+ colorManagement OCIO
+ OCIO_config aces_1.2
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT scene_linear
+ monitorLut "sRGB (ACES)"
+ monitorOutLUT "sRGB (ACES)"
+ int8Lut matte_paint
+ int16Lut texture_paint
+ logLut compositing_log
+ floatLut scene_linear
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode36
+ tile_color 0xaaaaaa00
+ label LIGHT_PRECOMP
+ note_font_size 42
+ xpos 12801
+ ypos -5945
+ appearance Border
+ bdwidth 1455
+ bdheight 986
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode37
+ tile_color 0x7171c600
+ label BG_SOURCE
+ note_font_size 42
+ xpos 12955
+ ypos -5860
+ appearance Border
+ bdwidth 317
+ bdheight 273
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode38
+ tile_color 0xff71c6ff
+ label CHAR_SOURCE
+ note_font_size 42
+ xpos 13368
+ ypos -5857
+ appearance Border
+ bdwidth 361
+ bdheight 273
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode39
+ tile_color 0x388e8e00
+ label matte
+ note_font_size 42
+ xpos 13885
+ ypos -5853
+ appearance Border
+ bdwidth 209
+ bdheight 277
+ z_order 1
+}
+Read {
+ inputs 0
+ file_type exr
+ file //192.168.99.203/prj/cinderella/render/ep08/sq37/sh010/render/matte_layer_v01/matte_layer_v01.####.exr
+ format "2048 858 0 0 2048 858 1 cinderella"
+ last 106
+ origlast 106
+ origset true
+ name Read5
+ xpos 13957
+ ypos -5765
+}
+add_layer {matte_mask matte_mask.red matte_mask.green matte_mask.blue}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 matte_mask
+ fromInput2 {{0} B}
+ mappings "4 matte_mask.green 0 1 rgba.green 0 1 matte_mask.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.red 0 0 matte_mask.red 0 0 rgba.alpha 0 3"
+ name Shuffle44
+ xpos 13957
+ ypos -5489
+}
+Dot {
+ name Dot89
+ xpos 13979
+ ypos -5347
+}
+Read {
+ inputs 0
+ file_type exr
+ file //192.168.99.203/prj/cinderella/render/ep03/sq11/sh010/render/chars_layer_v01/chars_layer_v01.####.exr
+ format "2048 858 0 0 2048 858 1 cinderella"
+ last 53
+ origlast 53
+ origset true
+ name Read1
+ xpos 13472
+ ypos -5774
+}
+Dot {
+ name Dot176
+ xpos 13494
+ ypos -5549
+}
+set Nb1dc6000 [stack 0]
+Merge2 {
+ inputs 2
+ operation mask
+ name Merge20
+ xpos 13472
+ ypos -5338
+}
+set Nb1dc6400 [stack 0]
+Viewer {
+ frame 1
+ frame_range 1-53
+ viewerProcess "sRGB (ACES)"
+ name Viewer1
+ xpos 13071
+ ypos -4990
+}
+Read {
+ inputs 0
+ file_type exr
+ file //192.168.99.203/prj/cinderella/render/ep03/sq11/sh010/render/env_layer_v01/env_layer_v01.0001.exr
+ format "2048 858 0 0 2048 858 1 cinderella"
+ origset true
+ name Read2
+ xpos 13071
+ ypos -5763
+}
+Dot {
+ name Dot103
+ xpos 13093
+ ypos -5555
+}
+set Nb1dc7000 [stack 0]
+Dot {
+ name Dot85
+ xpos 12974
+ ypos -5555
+}
+LayerContactSheet {
+ showLayerNames true
+ name LayerContactSheet2
+ xpos 12952
+ ypos -5483
+}
+push $Nb1dc6000
+Dot {
+ name Dot88
+ xpos 13650
+ ypos -5549
+}
+LayerContactSheet {
+ showLayerNames true
+ name LayerContactSheet3
+ xpos 13628
+ ypos -5488
+}
+push $Nb1dc6400
+Dot {
+ name Dot86
+ xpos 13494
+ ypos -5232
+}
+push $Nb1dc7000
+Merge2 {
+ inputs 2
+ name Merge21
+ xpos 13071
+ ypos -5223
+}
+Write {
+ file //192.168.99.202/prj/cinderella/render/ep99/sq99/sh099/comp/mov/ep99_sq99_sh099_precomp.mov
+ colorspace color_picking
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec h264
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality Custom
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 28000
+ mov64_bitrate_tolerance 0
+ mov64_quality_min 1
+ mov64_quality_max 3
+ checkHashOnRead false
+ version 26
+ name MOV
+ xpos 13071
+ ypos -5100
+}

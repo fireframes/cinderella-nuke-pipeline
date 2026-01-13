@@ -1,0 +1,95 @@
+#! C:/Program Files/Nuke14.0v1/nuke-14.0.1.dll -nx
+version 14.0 v1
+Gizmo {
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 271
+  ypos 457
+ }
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message " \[date %d]/\[date %b]/\[date %y]   \[string range \[file rootname \[file tail \[value root.name]]] 0 end]"
+  old_message {{32 50 53 47 74 117 108 47 50 53 32 32 32 101 112 48 56 95 115 113 51 49 95 115 104 48 51 48 95 118 48 50}
+    }
+  old_expression_markers {{1 2 4 6 8 9 13 31}
+    }
+  box {30 2.6 728 82}
+  yjustify bottom
+  transforms {{0 2}
+    }
+  cursor_position 99
+  font {{ Times New Roman : Regular : times.ttf : 0 }}
+  global_font_scale 0.24
+  scale {1 1}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{1028 2.5}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform"}
+  animation_layers {{1 11 960 540 -4.05 2.1 1 1 0 0 0 0}
+    }
+  color {{parent.Frame.color} {parent.Frame.color} {parent.Frame.color} {parent.Frame.color}}
+  enable_background true
+  background_opacity 0.46
+  background_border_x 3755
+  background_border_y 5.4
+  enable_shadows true
+  shadow_opacity 0.88
+  shadow_angle 321
+  shadow_distance 2.8
+  shadow_softness 0.89
+  shadow_size 0.05
+  name ArtistDateShot
+  xpos 271
+  ypos 507
+ }
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "\[format %3d \[frame]] \n"
+  old_message {{32 49 48 32 10}
+    }
+  old_expression_markers {{0 2}
+    }
+  box {1736 4.725 2018 82.275}
+  xjustify right
+  yjustify bottom
+  transforms {{0 2}
+    }
+  cursor_position 22
+  font {{ Times New Roman : Regular : times.ttf : 0 }}
+  global_font_scale {{parent.ArtistDateShot.global_font_scale}}
+  scale {1 1}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{1028 2.5}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform"}
+  animation_layers {{1 11 960 540 {parent.ArtistDateShot.translate} {parent.ArtistDateShot.translate} 1 1 0 0 0 0}
+    }
+  color {1 1 1 1}
+  background_opacity 0
+  background_border_x 10.8
+  background_border_y 10.8
+  enable_shadows true
+  shadow_opacity 0.88
+  shadow_angle 321
+  shadow_distance 2.8
+  shadow_softness 0.89
+  shadow_size 0.05
+  name Frame
+  selected true
+  xpos 271
+  ypos 561
+ }
+ Output {
+  name Output1
+  xpos 271
+  ypos 628
+ }
+end_group

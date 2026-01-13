@@ -1,0 +1,28 @@
+# Exclude .venv
+.venv
+
+# Exclude all JSON files
+*.json
+
+# Exclude directories
+**/tests/
+**/.idea/
+**/bah_gizmos
+
+# Python cache
+*.pyc
+
+# Maybe later
+~gizmos
+~toolsets
+
+# Other exclusions
+cinderella_config.py
+*.dat
+TODO
+
+# Exclude .env files
+*.env
+
+# Temporary exclusion
+scripts/tests/_publish.py

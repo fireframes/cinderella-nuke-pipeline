@@ -1,0 +1,76 @@
+import nuke
+import os
+import re
+
+
+from ..config.config_loader import get_project_config
+
+RENDER_PATH = get_project_config().get("server_render_path")
+COMP_PATH = get_project_config().get("server_comp_path")
+
+def update_write_path():
+    try:
+        sel = nuke.selectedNode()
+    except:
+        return
+
+    if not sel.Class() == 'Write':
+        write = nuke.createNode('Write', inpanel=False)
+        write.setInput(0, sel)
+    else:
+        write = sel
+
+    # Get file format
+    format = write['file_type'].value()
+    if format not in ["exr", "mov"]:
+        choice = nuke.choice("Write Format", "Select file format:", ["EXR", "MOV"])
+        if choice == 0:
+            format = "exr"
+        elif choice == 1:
+            format = "mov"
+        else:
+            return
+
+    # Form file paths
+    script_path = nuke.root().name()
+    if not script_path:
+        nuke.message("Please save the script first.")
+        return
+
+    script_name = os.path.basename(script_path).rstrip('.nk')
+    print(script_name)
+    match = re.match(r"(ep\d+)_?(sq\d+)_?(sh\d+)(?:_(v\d+))?(?:_(light_precomp))?", script_name, re.IGNORECASE)
+    if not match:
+        nuke.message("Script name doesn't match expected pattern (ep##_sq##_sh###).")
+        return
+
+    ep, sq, sh, ver, light_precomp = match.groups()
+
+    if light_precomp:
+        new_full_path = f"{COMP_PATH}/{ep}/{sq}/{sh}/light_precomp/mov/{ep}_{sq}_{sh}_light_precomp.mov"
+    else:
+        new_base_path = f"{COMP_PATH}/{ep}/{sq}/{sh}/comp/{format}"
+        if format == 'exr':
+            new_filename = f"{ep}_{sq}_{sh}.%04d.exr"
+        elif format == 'mov':
+            new_filename = f"{ep}_{sq}_{sh}_{ver}.mov"
+        new_full_path = os.path.join(new_base_path, new_filename).replace("\\","/")
+
+
+    # Set values
+    write.setName(format.upper())
+    write['file'].setValue(new_full_path)
+    write['file_type'].setValue(format)
+
+    if format == 'exr':
+        write['write_ACES_compliant_EXR'].setValue(True)
+        write['colorspace'].setValue('scene_linear')
+    elif format == 'mov':
+        write['colorspace'].setValue('color_picking')
+        write['in_colorspace'].setValue('scene_linear')
+        write['out_colorspace'].setValue('scene_linear')
+        write['mov64_codec'].setValue('h264')
+        # write['mov64_pixel_format'].setValue([0, 'yuv420p\\tYCbCr 4:2:0 8-bit'])
+
+    # write['file'].setEnabled(False)
+    write['create_directories'].setEnabled(False)
