@@ -242,7 +242,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
 
         buttons_layout = QtWidgets.QHBoxLayout()
         self.refresh_btn = QtWidgets.QPushButton("Force Refresh")
-        self.refresh_btn.setToolTip("Force update shot list from server (ignores 48-hour cache)")
+        self.refresh_btn.setToolTip("Force update shot list from server (ignores 24-hour cache)")
 
         self.set_as_current_btn = QtWidgets.QPushButton("Set Current")
         self.set_as_current_btn.setToolTip("Set initially opened script as current shot context in Shot Manager")
@@ -356,7 +356,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
         # 4. Connect Signals
         self.thread.started.connect(self.worker.run)
         
-        # CRITICAL FIX: Ensure data is passed cleanly before cleanup
+        # CEnsure data is passed cleanly before cleanup
         self.worker.finished.connect(self.on_scan_finished)
         
         # Standard Cleanup
@@ -396,9 +396,6 @@ class ShotManagerWidget(QtWidgets.QWidget):
             self.refresh_btn.setEnabled(True)
             self.refresh_btn.setText("Force Refresh")
 
-        # CRITICAL FIX: Do NOT set self.thread = None here.
-        # Let 'deleteLater' handle the cleanup naturally in the next event loop.
-
     def on_scan_progress(self, msg):
         # Optional: Update status bar or log
         pass 
@@ -434,7 +431,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
             cache_time = datetime.strptime(cache_data.get('timestamp', ''), "%Y-%m-%d %H:%M:%S")
             current_time = datetime.now()
 
-            if (current_time - cache_time).total_seconds() < 172800:  # 48 hours
+            if (current_time - cache_time).total_seconds() < 86400:  # 24 hours
                 self.all_shots = cache_data.get('shots', [])
                 self.build_shot_hierarchy()
                 self.update_episode_dropdown()
