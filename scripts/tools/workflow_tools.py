@@ -1,5 +1,7 @@
 # workflow_tools.py - Main module file v0.1
 import nuke
+from PySide2 import QtCore
+from .write_path import update_write_path
 
 
 def reload_read_nodes():
@@ -39,6 +41,7 @@ def extract_lgt_passes():
         shuffle.setYpos(start_y)
         shuffle.setInput(0, read_node)
 
+
 def delete_animation():
     nodes = nuke.selectedNodes()
 
@@ -49,3 +52,19 @@ def delete_animation():
                     knob.clearAnimated()
             except AttributeError as error:
                 nuke.tprint(f"Could not clear animation on {node.name()}.{name}: {error}")
+
+
+def onScriptDrop(mimeType, text):
+    if mimeType == 'text/plain' and text.strip().lower().endswith('.nk'):
+        QtCore.QTimer.singleShot(0, process_last_paste)
+
+    return None
+
+
+def process_last_paste():
+    for node in nuke.selectedNodes():
+        if node.Class() == "Write":
+            name = node.knob('name').value()
+            if 'EXR' in name or 'MOV' in name:
+                update_write_path(node)
+

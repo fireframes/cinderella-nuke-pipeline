@@ -144,3 +144,5 @@ nuke.addOnCreate(lambda: nuke.knobDefault("Multiply.label", "Value: [ value valu
 # Update plugin menu on
 # nukescripts.update_plugin_menu("All plugins")
 
+# Register onScriptDrop callback: updates Write nodes paths for EXR and MOV
+nukescripts.addDropDataCallback(tools.workflow_tools.onScriptDrop)

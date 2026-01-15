@@ -8,17 +8,18 @@ from ..config.config_loader import get_project_config
 RENDER_PATH = get_project_config().get("server_render_path")
 COMP_PATH = get_project_config().get("server_comp_path")
 
-def update_write_path():
-    try:
-        sel = nuke.selectedNode()
-    except:
-        return
+def update_write_path(node):
+    if not node:
+        try:
+            node = nuke.selectedNode()
+        except:
+            return
 
-    if not sel.Class() == 'Write':
+    if not node.Class() == 'Write':
         write = nuke.createNode('Write', inpanel=False)
-        write.setInput(0, sel)
+        write.setInput(0, node)
     else:
-        write = sel
+        write = node
 
     # Get file format
     format = write['file_type'].value()
