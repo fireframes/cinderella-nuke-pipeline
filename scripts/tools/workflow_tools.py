@@ -54,10 +54,10 @@ def delete_animation():
                 nuke.tprint(f"Could not clear animation on {node.name()}.{name}: {error}")
 
 
+# Update Write nodes paths in a dropped script
 def onScriptDrop(mimeType, text):
     if mimeType == 'text/plain' and text.strip().lower().endswith('.nk'):
-        QtCore.QTimer.singleShot(0, process_last_paste)
-
+        QtCore.QTimer.singleShot(100, process_last_paste)
     return None
 
 
@@ -67,4 +67,3 @@ def process_last_paste():
             name = node.knob('name').value()
             if 'EXR' in name or 'MOV' in name:
                 update_write_path(node)
-

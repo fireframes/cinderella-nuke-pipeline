@@ -8,8 +8,8 @@ from ..config.config_loader import get_project_config
 RENDER_PATH = get_project_config().get("server_render_path")
 COMP_PATH = get_project_config().get("server_comp_path")
 
-def update_write_path(node):
-    if not node:
+def update_write_path(node=None):
+    if node is None:
         try:
             node = nuke.selectedNode()
         except:
