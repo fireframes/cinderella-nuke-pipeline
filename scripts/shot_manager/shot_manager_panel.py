@@ -13,7 +13,12 @@ import subprocess
 from datetime import datetime
 from ..config import get_project_config
 from ..config import project_root_settings
-from ..cerebro import publish_shot_to_cerebro
+from ..cerebro import (publish_shot_to_cerebro, 
+                        cerebro_database_connect,
+                        construct_cerebro_task_url,
+                        STATUSES,
+                        pref)
+from pycerebro import database, dbtypes, cargador
 from ..tools import import_tools
 
 _widget_instance = None
@@ -804,10 +809,48 @@ class ShotManagerWidget(QtWidgets.QWidget):
             recent_script = nk_files[0]
 
         recent_script_path = os.path.join(nk_dir, recent_script)
+
+        shot_name = paths["shot_name"]
+
         try:
             nuke.scriptOpen(recent_script_path)
+
         except RuntimeError as e:
             nuke.tprint(f"Error opening script: {e}")
+            return None
+
+        try:
+            db = cerebro_database_connect()
+            if not db:
+                raise ConnectionError("Failed to connect to Cerebro database")
+
+            carga = cargador.Cargador(
+                pref.cerebro_cargador_address,
+                pref.cerebro_cargador_native_port,
+                pref.cerebro_cargador_http_port
+            )
+            task_url = construct_cerebro_task_url(shot_name)
+            task = db.task_by_url(task_url)
+            if not task or len(task) == 0 or task[0] is None:
+                raise ValueError(f"Task not found in Cerebro: {task_url}")
+            
+            task_id = task[0]
+            task = db.task(task_id)
+            task_curr_status = task[37]
+            task_path = task[5]
+
+            nuke.tprint(f"Task status id: {task_curr_status}")
+            try:
+                if task_curr_status == STATUSES['to_fix'] or task_curr_status == STATUSES['ready_fw']:
+                    db.task_set_status(task_id, STATUSES['in_progress'])
+                    nuke.tprint(f"Changing task {task_path} status to 'in_progress'")
+            except:
+                nuke.tprint(f"Task {task_path} status left unchanged")
+
+        except Exception as e:
+            error_message = f"Error changing task {shot_name} status:\n{e}"
+            nuke.executeInMainThread(nuke.error, args=(error_message,))
+        
 
     def open_comp_dir(self):
         paths = self.get_shot_paths(show_message=True)
@@ -918,11 +961,11 @@ def show_floating_panel():
     _widget_instance.raise_()
     _widget_instance.activateWindow()
 
-    def on_destroy():
-        global _widget_instance
-        _widget_instance = None
-    _widget_instance.destroyed.connect(on_destroy)
+    # def on_destroy():
+    #     global _widget_instance
+    #     _widget_instance = None
+    # _widget_instance.destroyed.connect(on_destroy)
 
 
-def create_shot_manager_panel():
-    return ShotManagerWidget()
+# def create_shot_manager_panel():
+#     return ShotManagerWidget()

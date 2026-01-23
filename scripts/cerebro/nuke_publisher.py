@@ -36,7 +36,7 @@ try:
     cerebro_server_address = pref.cerebro_server_address
     STATUSES = {
         'pause': 3059206,
-        'ready_fo': pref.cerebro_status_ready_fw,
+        'ready_fw': pref.cerebro_status_ready_fw,
         'to_fix': pref.cerebro_status_revision,
         'in_progress': pref.cerebro_status_progress,
         'approval': pref.cerebro_status_approval,
@@ -328,6 +328,7 @@ def _background_publish(shot_name, description, comment, work_time):
 
         nuke.executeInMainThread(nuke.message, args=(f"Successfully published {shot_name} to Cerebro",))
         nuke.tprint(f"Successfully published {shot_name} to Cerebro")
+        nuke.tprint(f"Changed task {shot_name} status to 'pending'")
 
     except Exception as e:
         error_message = f"Error during Cerebro publish:\n{e}"

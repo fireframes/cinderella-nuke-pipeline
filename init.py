@@ -2,6 +2,7 @@ import nuke
 import os
 import sys
 
+
 nuke_root = os.path.dirname(__file__).replace('\\', '/')
 plugins_path = f"{nuke_root}/plugins"
 
