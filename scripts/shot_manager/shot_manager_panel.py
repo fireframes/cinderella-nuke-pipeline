@@ -840,11 +840,13 @@ class ShotManagerWidget(QtWidgets.QWidget):
             task_path = task[5]
 
             nuke.tprint(f"Task status id: {task_curr_status}")
-            try:
-                if task_curr_status == STATUSES['to_fix'] or task_curr_status == STATUSES['ready_fw']:
+            if task_curr_status == STATUSES['to_fix'] or task_curr_status == STATUSES['ready_fw']:
+                try:
                     db.task_set_status(task_id, STATUSES['in_progress'])
                     nuke.tprint(f"Changing task {task_path} status to 'in_progress'")
-            except:
+                except Exception as e:
+                    nuke.tprint(f"Failed to update task status: {e}")
+            else:
                 nuke.tprint(f"Task {task_path} status left unchanged")
 
         except Exception as e:
