@@ -963,11 +963,11 @@ def show_floating_panel():
     _widget_instance.raise_()
     _widget_instance.activateWindow()
 
-    # def on_destroy():
-    #     global _widget_instance
-    #     _widget_instance = None
-    # _widget_instance.destroyed.connect(on_destroy)
+    def on_destroy():
+        global _widget_instance
+        _widget_instance = None
+    _widget_instance.destroyed.connect(on_destroy)
 
 
-# def create_shot_manager_panel():
-#     return ShotManagerWidget()
+def create_shot_manager_panel():
+    return ShotManagerWidget()

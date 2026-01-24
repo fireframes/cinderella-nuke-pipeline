@@ -37,14 +37,14 @@ coreMenu = nukeMenu.addMenu('Core Tools')
 coreToolbar = toolbar.addMenu('Core Tools', icon="core-value-color.png")
 
 # Register ShotMangerWidget as Panel
-# panel_id = "com.fireframes.shotmanager"
-# panel_name = "Shot Manager"
-# nukescripts.registerWidgetAsPanel(
-#     'shot_manager.shot_manager_panel.create_shot_manager_panel',
-#     panel_name,
-#     panel_id
-# )
-# nuke.menu('Pane').addCommand(panel_name, f"nukescripts.panels.restorePanel('{panel_id}')")
+panel_id = "com.fireframes.shotmanager"
+panel_name = "Shot Manager"
+nukescripts.registerWidgetAsPanel(
+    'shot_manager.shot_manager_panel.create_shot_manager_panel',
+    panel_name,
+    panel_id
+)
+nuke.menu('Pane').addCommand(panel_name, f"nukescripts.panels.restorePanel('{panel_id}')")
 
 # Utilities entries and keyboard shortcuts
 studioTools = nukeMenu.addMenu("Utilities")

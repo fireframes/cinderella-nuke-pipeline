@@ -10,11 +10,11 @@ if ($null -ne $currentPath) { $currentPath = $currentPath.TrimEnd('\') }
 
 if ($currentPath -eq $localPath) {
     $nukePath = $serverPath
-    $mode = "prod"
+    $mode = "PROD"
 }
 else {
     $nukePath = $localPath
-    $mode = "dev"
+    $mode = "DEV"
 }
 
 # 1. Update the persistent Registry (User Scope)
