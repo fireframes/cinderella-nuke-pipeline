@@ -768,6 +768,8 @@ class ShotManagerWidget(QtWidgets.QWidget):
         if not paths:
             return
 
+        self.update_cerebro_status_to_inprogress(paths['shot_name'])
+
         for directory in [paths["nk_dir"], paths["exr_dir"], paths["mov_dir"], paths["thumb_dir"]]:
             if not os.path.exists(directory):
                 os.makedirs(directory)
@@ -810,7 +812,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
 
         recent_script_path = os.path.join(nk_dir, recent_script)
 
-        shot_name = paths["shot_name"]
+        self.update_cerebro_status_to_inprogress(paths['shot_name'])
 
         try:
             nuke.scriptOpen(recent_script_path)
@@ -819,40 +821,49 @@ class ShotManagerWidget(QtWidgets.QWidget):
             nuke.tprint(f"Error opening script: {e}")
             return None
 
+    def update_cerebro_status_to_inprogress(self, shot_name):
+        """
+        Updates the shot status in Cerebro to 'In Progress' if it is currently 
+        'To Fix' or 'Ready for Work'.
+        """
+        nuke.tprint(f"Attempting Cerebro status update for: {shot_name}")
+        
         try:
+            # Connect
             db = cerebro_database_connect()
             if not db:
-                raise ConnectionError("Failed to connect to Cerebro database")
+                nuke.tprint("Cerebro: Could not connect to database.")
+                return
 
-            carga = cargador.Cargador(
-                pref.cerebro_cargador_address,
-                pref.cerebro_cargador_native_port,
-                pref.cerebro_cargador_http_port
-            )
+            # Find Task
             task_url = construct_cerebro_task_url(shot_name)
-            task = db.task_by_url(task_url)
-            if not task or len(task) == 0 or task[0] is None:
-                raise ValueError(f"Task not found in Cerebro: {task_url}")
+            # Ensure safe slashes just in case
+            task_url = task_url.replace('\\', '/') 
             
-            task_id = task[0]
-            task = db.task(task_id)
-            task_curr_status = task[37]
-            task_path = task[5]
+            task = db.task_by_url(task_url)
+            
+            if not task or len(task) == 0 or task[0] is None:
+                nuke.tprint(f"Cerebro: Task not found for URL: {task_url}")
+                return
 
-            nuke.tprint(f"Task status id: {task_curr_status}")
+            task_id = task[0]
+            
+            # Get current status
+            task_details = db.task(task_id)
+            if not task_details:
+                return
+
+            task_curr_status = task_details[37] # Index 37 is status ID
+
+            # Check if update is needed
             if task_curr_status == STATUSES['to_fix'] or task_curr_status == STATUSES['ready_fw']:
-                try:
-                    db.task_set_status(task_id, STATUSES['in_progress'])
-                    nuke.tprint(f"Changing task {task_path} status to 'in_progress'")
-                except Exception as e:
-                    nuke.tprint(f"Failed to update task status: {e}")
+                db.task_set_status(task_id, STATUSES['in_progress'])
+                nuke.tprint(f"Cerebro: {shot_name} status updated to 'In Progress'")
             else:
-                nuke.tprint(f"Task {task_path} status left unchanged")
+                nuke.tprint(f"Cerebro: Status update not required (Current ID: {task_curr_status})")
 
         except Exception as e:
-            error_message = f"Error changing task {shot_name} status:\n{e}"
-            nuke.executeInMainThread(nuke.error, args=(error_message,))
-        
+            nuke.tprint(f"Cerebro Error: {e}")        
 
     def open_comp_dir(self):
         paths = self.get_shot_paths(show_message=True)
