@@ -823,8 +823,8 @@ class ShotManagerWidget(QtWidgets.QWidget):
 
     def update_cerebro_status_to_inprogress(self, shot_name):
         """
-        Updates the shot status in Cerebro to 'In Progress' if it is currently 
-        'To Fix' or 'Ready for Work'.
+        Updates the shot status in Cerebro to 'in progress' if it is currently 
+        'to fix' or 'ready for operation'.
         """
         nuke.tprint(f"Attempting Cerebro status update for: {shot_name}")
         
@@ -858,7 +858,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
             # Check if update is needed
             if task_curr_status == STATUSES['to_fix'] or task_curr_status == STATUSES['ready_fw']:
                 db.task_set_status(task_id, STATUSES['in_progress'])
-                nuke.tprint(f"Cerebro: {shot_name} status updated to 'In Progress'")
+                nuke.tprint(f"Cerebro: {shot_name} status updated to 'in progress'")
             else:
                 nuke.tprint(f"Cerebro: Status update not required (Current ID: {task_curr_status})")
 
