@@ -71,6 +71,7 @@ def update_write_path(node=None):
         write['in_colorspace'].setValue('scene_linear')
         write['out_colorspace'].setValue('scene_linear')
         write['mov64_codec'].setValue('h264')
+        write['render_order'].setValue('2')
         # write['mov64_pixel_format'].setValue([0, 'yuv420p\\tYCbCr 4:2:0 8-bit'])
 
     # write['file'].setEnabled(False)
