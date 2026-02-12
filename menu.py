@@ -18,7 +18,7 @@ if scripts_path not in sys.path:
 from scripts import shot_manager
 from scripts import tools
 from scripts import cerebro
-
+from scripts import deadline
 
 # Set up paths
 nuke_root = os.path.dirname(__file__)
@@ -49,6 +49,7 @@ nuke.menu('Pane').addCommand(panel_name, f"nukescripts.panels.restorePanel('{pan
 # Utilities entries and keyboard shortcuts
 studioTools = nukeMenu.addMenu("Utilities")
 studioTools.addCommand("Shot Manager", "shot_manager.shot_manager_panel.show_floating_panel()", "alt+S")
+studioTools.addCommand("Submit To Deadline", "deadline.main_submit()", "shift+D")
 studioTools.addCommand("Import Render", "tools.import_tools.import_render_layers()", "shift+R")
 studioTools.addCommand("Import Camera", "tools.import_tools.import_camera()", "shift+C")
 studioTools.addCommand("Update Write Path", "tools.write_path.update_write_path()", "shift+W")
