@@ -14,7 +14,7 @@ def submit_node(node, priority, dependency_ids=None):
     start, end = int(nuke.root().firstFrame()), int(nuke.root().lastFrame())
    
     chunk_size = 20
-    if 'EXR' in node.name() and end <= 50:
+    if 'EXR' in node.name() and end <= 30:
         chunk_size = 10
     elif 'MOV' in node.name():
         chunk_size = end
@@ -64,6 +64,15 @@ def main_submit():
     sel = nuke.selectedNodes('Write')
     exr = next((n for n in sel if n.name() == "EXR"), None)
     mov = next((n for n in sel if n.name() == "MOV"), None)
+
+    if len(sel) == 1 and exr:
+        nuke.scriptSave()
+        exr_id = submit_node(exr, 100)
+        if not exr_id:
+            return
+        nuke.tprint(f"EXR Submitted to Deadline: {exr_id}")
+        nuke.message(f"Job Submitted to Deadline\nEXR: {exr_id}")
+        return
 
     if not exr or not mov:
         nuke.message("Select both EXR and MOV nodes.")
