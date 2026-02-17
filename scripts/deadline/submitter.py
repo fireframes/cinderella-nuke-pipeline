@@ -7,7 +7,7 @@ import DeadlineNukeClient
 def get_deadline_command():
     return DeadlineNukeClient.GetDeadlineCommand()
 
-def submit_node(node, priority, dependency_ids=None):
+def submit_node(node, priority, dependency_ids=None, batch_name=1):
     deadline_cmd = get_deadline_command()
     script_path = nuke.root().name()
     job_name = f"{os.path.basename(script_path)} [{node.name()}]"
@@ -21,7 +21,7 @@ def submit_node(node, priority, dependency_ids=None):
 
     job_info = [
         f"Name={job_name}",
-        f"BatchName={os.path.basename(script_path)}",
+        f"BatchName={os.path.basename(script_path) if batch_name else ''}",
         "Plugin=Nuke",
         f"Priority={priority}",
         f"Frames={start}-{end}",
@@ -29,6 +29,7 @@ def submit_node(node, priority, dependency_ids=None):
         "Pool=nuke", 
         "Group=nuke"
     ]
+    
     if dependency_ids: 
         job_info.append(f"JobDependencies={dependency_ids}")
 
@@ -67,7 +68,7 @@ def main_submit():
 
     if len(sel) == 1 and exr:
         nuke.scriptSave()
-        exr_id = submit_node(exr, 100)
+        exr_id = submit_node(exr, 100, batch_name=0)
         if not exr_id:
             return
         nuke.tprint(f"EXR Submitted to Deadline: {exr_id}")
@@ -112,6 +113,6 @@ def main_submit():
     nuke.tprint(f"Updated Read node to: {exr_path}")
 
     mov_id = submit_node(mov, 100, dependency_ids=exr_id)
-    
+    nuke.tprint(f"MOV Submitted: {mov_id}")
     if mov_id:
         nuke.message(f"Jobs Submitted to Deadline\nEXR: {exr_id}\nMOV: {mov_id}")
