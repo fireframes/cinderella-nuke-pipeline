@@ -41,19 +41,19 @@ def update_write_path(node=None):
     script_name = os.path.basename(script_path)
     if script_name.endswith('.nk'):
         script_name = script_name[:-3]
-    match = re.match(r"(ep\d+)_?(sq\d+)_?(sh\d+)(?:_(v\d+))?(?:_(light_precomp))?", script_name, re.IGNORECASE)
+    match = re.match(r"(ep\d+)_?(sq\d+)_?(sh\d+)(_light_precomp|_precomp)?(?:_(v\d+))?", script_name, re.IGNORECASE)
     if not match:
         nuke.message("Script name doesn't match expected pattern (ep##_sq##_sh###).")
         return
 
-    ep, sq, sh, ver, light_precomp = match.groups()
+    ep, sq, sh, precomp, ver = match.groups()
 
-    if light_precomp:
+    if precomp:
         base_path = f"{COMP_PATH}/{ep}/{sq}/{sh}/light_precomp/{format}"
         if format == 'exr':
-            new_full_path = f"{base_path}/{ep}_{sq}_{sh}.%04d.exr"
+            new_full_path = f"{base_path}/{ep}_{sq}_{sh}_precomp.%04d.exr"
         elif format == 'mov':
-            new_full_path = f"{base_path}/{ep}_{sq}_{sh}_light_precomp.mov"
+            new_full_path = f"{base_path}/{ep}_{sq}_{sh}_precomp_{ver}.mov"
     else:
         new_base_path = f"{COMP_PATH}/{ep}/{sq}/{sh}/comp/{format}"
         if format == 'exr':

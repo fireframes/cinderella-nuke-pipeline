@@ -19,7 +19,7 @@ def _get_shot_info():
         return None
 
     script_name = os.path.basename(script_path)
-    match = re.match(r"(ep\d+)_?(sq\d+)_?(sh\d+)_(v\d+)(?:_light_precomp)?", script_name, re.IGNORECASE)
+    match = re.match(r"(ep\d+)_?(sq\d+)_?(sh\d+)(_light_precomp|_precomp)?(?:_(v\d+))?", script_name, re.IGNORECASE)
     if not match:
         nuke.message("Script name doesn't match expected pattern (ep##_sq##_sh##_v##).")
         return None

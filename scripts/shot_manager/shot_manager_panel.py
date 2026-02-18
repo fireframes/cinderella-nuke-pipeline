@@ -284,9 +284,11 @@ class ShotManagerWidget(QtWidgets.QWidget):
 
         light_group = QtWidgets.QGroupBox("Lighting")
         light_layout = QtWidgets.QVBoxLayout()
-        self.create_light_precomp_btn = QtWidgets.QPushButton("Create Light Precomp")
+        self.open_precomp_btn = QtWidgets.QPushButton("Open Light Precomp")
+        self.create_precomp_btn = QtWidgets.QPushButton("Create Light Precomp")
         self.open_precomp_dir_btn = QtWidgets.QPushButton("Open Precomp Directory")
-        light_layout.addWidget(self.create_light_precomp_btn)
+        light_layout.addWidget(self.open_precomp_btn)
+        light_layout.addWidget(self.create_precomp_btn)
         light_layout.addWidget(self.open_precomp_dir_btn)
         light_group.setLayout(light_layout)
 
@@ -328,7 +330,8 @@ class ShotManagerWidget(QtWidgets.QWidget):
         self.open_comp_dir_btn.clicked.connect(self.open_comp_dir)
         self.import_render_btn.clicked.connect(import_tools.import_render_layers)
         self.import_template_btn.clicked.connect(import_tools.import_template)
-        self.create_light_precomp_btn.clicked.connect(self.create_light_precomp)
+        self.open_precomp_btn.clicked.connect(self.open_precomp)
+        self.create_precomp_btn.clicked.connect(self.create_precomp)
         self.open_precomp_dir_btn.clicked.connect(self.open_precomp_dir)
         self.publish_to_cerebro_btn.clicked.connect(self.publish_shot)
 
@@ -774,6 +777,9 @@ class ShotManagerWidget(QtWidgets.QWidget):
             if not os.path.exists(directory):
                 os.makedirs(directory)
 
+        # script_name = f"{paths['shot_name']}_{ver}.nk"
+        # script_path = os.path.join(nk_dir, script_name)
+
         script_name = f"{paths['shot_name']}_v01.nk"
         script_path = os.path.join(paths["nk_dir"], script_name)
 
@@ -893,36 +899,94 @@ class ShotManagerWidget(QtWidgets.QWidget):
         except Exception as e:
             nuke.tprint(f"Failed to open folder: {e}")
 
-    def create_light_precomp(self):
+    def open_precomp(self):
+        """
+        Open only. Finds and opens the latest precomp script.
+        """
+        paths = self.get_shot_paths(show_message=True)
+        if not paths:
+            return
+
+        precomp_nk_dir = os.path.join(paths["precomp_dir"], "nk")
+        if not os.path.exists(precomp_nk_dir) or not os.listdir(precomp_nk_dir):
+            nuke.message("No precomp scripts found for this shot. Use 'Create Precomp' first.")
+            return
+
+        nk_files = [f for f in os.listdir(precomp_nk_dir) if f.endswith('.nk')]
+        if not nk_files:
+            nuke.message("No precomp scripts found for this shot.")
+            return
+
+        # Find latest (prefer versioned, then fall back to alphabetical)
+        versioned = [f for f in nk_files if re.search(r'_v(\d+)', f)]
+        if versioned:
+            latest_script = max(versioned, key=lambda f: (int(re.search(r'_v(\d+)', f).group(1)), f))
+        else:
+            latest_script = max(nk_files, key=lambda f: f)
+
+        script_path = os.path.join(precomp_nk_dir, latest_script).replace('\\', '/')
+        try:
+            nuke.scriptOpen(script_path)
+            nuke.tprint(f"Opened precomp: {script_path}")
+            # self.update_cerebro_status_to_inprogress(paths['shot_name'])
+        except Exception as e:
+            nuke.tprint(f"Error opening precomp: {e}")
+
+    def create_precomp(self):
+        """
+        Centralized Creation and Versioning:
+        1. If none exist: Create v01 with Read layers and Template.
+        2. If exists: Increment version from latest and copy.
+        """
         paths = self.get_shot_paths(show_message=True)
         if not paths:
             return
 
         selected_shot = paths["shot_name"]
-        ep, sq, sh = paths["ep"], paths["sq"], paths["sh"]
+        precomp_nk_dir = os.path.join(paths["precomp_dir"], "nk")
+        
+        # Ensure directories exist
         precomp_base = paths["precomp_dir"]
-        precomp_dirs = {
-            "base": precomp_base,
-            "nk": os.path.join(precomp_base, "nk"),
-            "exr": os.path.join(precomp_base, "exr"),
-            "mov": os.path.join(precomp_base, "mov")
-        }
+        for d in ["nk", "exr", "mov"]:
+            p = os.path.join(precomp_base, d)
+            if not os.path.exists(p):
+                os.makedirs(p)
 
-        for directory in precomp_dirs.values():
-            if not os.path.exists(directory):
-                os.makedirs(directory)
+        existing_scripts = [f for f in os.listdir(precomp_nk_dir) if f.endswith('.nk')] if os.path.exists(precomp_nk_dir) else []
 
-        script_name = f"{selected_shot}_light_precomp.nk"
-        script_path = os.path.join(precomp_dirs['nk'], script_name)
+        # --- BRANCH A: INCREMENT VERSION ---
+        if existing_scripts:
+            # Find latest to increment from
+            def get_version(filename):
+                m = re.search(r'_v(\d+)', filename)
+                return int(m.group(1)) if m else 1
 
-        if os.path.exists(script_path):
-            if not nuke.ask(f"Script '{script_name}' exists. Overwrite?"):
-                nuke.scriptOpen(script_path)
-                return
+            latest_script = max(existing_scripts, key=lambda f: (get_version(f), f))
+            latest_ver = get_version(latest_script)
+            
+            new_ver = latest_ver + 1
+            new_script_name = f"{selected_shot}_precomp_v{new_ver:02d}.nk"
+            new_script_path = os.path.join(precomp_nk_dir, new_script_name).replace('\\', '/')
+            latest_script_path = os.path.join(precomp_nk_dir, latest_script).replace('\\', '/')
+
+            try:
+                # Open latest and save as new version
+                nuke.scriptOpen(latest_script_path)
+                nuke.scriptSaveAs(new_script_path)
+                nuke.tprint(f"Incremented precomp to v{new_ver:02d}: {new_script_path}")
+                # self.update_cerebro_status_to_inprogress(selected_shot)
+            except Exception as e:
+                nuke.message(f"Failed to increment precomp version:\n{e}")
+            return
+
+        # --- BRANCH B: INITIAL CREATION (v01) ---
+        ep, sq, sh = paths["ep"], paths["sq"], paths["sh"]
+        script_name = f"{selected_shot}_precomp_v01.nk"
+        script_path = os.path.join(precomp_nk_dir, script_name)
 
         nuke.scriptClear()
         project_root_settings()
-        nuke.root()['project_directory'].setValue(precomp_dirs["base"])
+        nuke.root()['project_directory'].setValue(precomp_base)
 
         if self.precomp_template_path and os.path.exists(self.precomp_template_path):
             nuke.nodePaste(self.precomp_template_path)
@@ -933,8 +997,8 @@ class ShotManagerWidget(QtWidgets.QWidget):
             nuke.scriptSaveAs(script_path)
             return
 
+        # Setup layers
         render_layers = [d for d in os.listdir(shot_render_path) if os.path.isdir(os.path.join(shot_render_path, d))]
-
         for node in nuke.allNodes('Read'):
             file_path = node['file'].getValue()
             for layer in render_layers:
@@ -944,22 +1008,22 @@ class ShotManagerWidget(QtWidgets.QWidget):
                     if sequence:
                         new_path = os.path.join(layer_dir, sequence[0]).replace('\\', '/')
                         node['file'].fromUserText(new_path)
-                        nuke.tprint(f"Updated Read node for: {layer}")
                     break
 
+        # Setup Write nodes
         for node in nuke.allNodes('Write'):
             name = node.name()
             if 'EXR' in name:
-                write_path = os.path.join(precomp_dirs['exr'], f"{selected_shot}.%04d.exr").replace('\\', '/')
+                write_path = os.path.join(precomp_base, "exr", f"{selected_shot}_precomp.%04d.exr").replace('\\', '/')
             elif 'MOV' in name:
-                write_path = os.path.join(precomp_dirs['mov'], f"{selected_shot}_light_precomp.mov").replace('\\', '/')
+                write_path = os.path.join(precomp_base, "mov", f"{selected_shot}_precomp_v01.mov").replace('\\', '/')
             else:
                 continue
             node['file'].setValue(write_path)
-            nuke.tprint(f"Updated Write node path: {write_path}")
 
         nuke.scriptSaveAs(script_path)
-        nuke.tprint(f"Created light precomp script: {script_path}")
+        nuke.tprint(f"Created initial light precomp (v01): {script_path}")
+        # self.update_cerebro_status_to_inprogress(selected_shot)
 
     def publish_shot(self):
         if self.shot_context is None:
