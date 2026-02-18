@@ -904,6 +904,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
         precomp_dirs = {
             "base": precomp_base,
             "nk": os.path.join(precomp_base, "nk"),
+            "exr": os.path.join(precomp_base, "exr"),
             "mov": os.path.join(precomp_base, "mov")
         }
 
@@ -947,7 +948,13 @@ class ShotManagerWidget(QtWidgets.QWidget):
                     break
 
         for node in nuke.allNodes('Write'):
-            write_path = os.path.join(precomp_dirs['mov'], f"{selected_shot}_light_precomp.mov").replace('\\', '/')
+            name = node.name()
+            if 'EXR' in name:
+                write_path = os.path.join(precomp_dirs['exr'], f"{selected_shot}.%04d.exr").replace('\\', '/')
+            elif 'MOV' in name:
+                write_path = os.path.join(precomp_dirs['mov'], f"{selected_shot}_light_precomp.mov").replace('\\', '/')
+            else:
+                continue
             node['file'].setValue(write_path)
             nuke.tprint(f"Updated Write node path: {write_path}")
 

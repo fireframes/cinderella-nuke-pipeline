@@ -38,8 +38,9 @@ def update_write_path(node=None):
         nuke.message("Please save the script first.")
         return
 
-    script_name = os.path.basename(script_path).rstrip('.nk')
-    print(script_name)
+    script_name = os.path.basename(script_path)
+    if script_name.endswith('.nk'):
+        script_name = script_name[:-3]
     match = re.match(r"(ep\d+)_?(sq\d+)_?(sh\d+)(?:_(v\d+))?(?:_(light_precomp))?", script_name, re.IGNORECASE)
     if not match:
         nuke.message("Script name doesn't match expected pattern (ep##_sq##_sh###).")
@@ -48,7 +49,11 @@ def update_write_path(node=None):
     ep, sq, sh, ver, light_precomp = match.groups()
 
     if light_precomp:
-        new_full_path = f"{COMP_PATH}/{ep}/{sq}/{sh}/light_precomp/mov/{ep}_{sq}_{sh}_light_precomp.mov"
+        base_path = f"{COMP_PATH}/{ep}/{sq}/{sh}/light_precomp/{format}"
+        if format == 'exr':
+            new_full_path = f"{base_path}/{ep}_{sq}_{sh}.%04d.exr"
+        elif format == 'mov':
+            new_full_path = f"{base_path}/{ep}_{sq}_{sh}_light_precomp.mov"
     else:
         new_base_path = f"{COMP_PATH}/{ep}/{sq}/{sh}/comp/{format}"
         if format == 'exr':
@@ -56,7 +61,6 @@ def update_write_path(node=None):
         elif format == 'mov':
             new_filename = f"{ep}_{sq}_{sh}_{ver}.mov"
         new_full_path = os.path.join(new_base_path, new_filename).replace("\\","/")
-
 
     # Set values
     write.setName(format.upper())

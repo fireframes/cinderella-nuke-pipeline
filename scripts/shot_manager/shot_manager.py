@@ -601,6 +601,7 @@ class ShotManagerPanel(nukescripts.PythonPanel):
         precomp_dirs = {
             "base": precomp_base,
             "nk": f"{precomp_base}/nk",
+            "exr": f"{precomp_base}/exr",
             "mov": f"{precomp_base}/mov"
         }
 
@@ -651,9 +652,15 @@ class ShotManagerPanel(nukescripts.PythonPanel):
                         nuke.tprint(f"Updated Read node for: {layer}")
                     break
 
-        # Update Write node
+        # Update Write nodes by name
         for node in nuke.allNodes('Write'):
-            write_path = f"{precomp_dirs['mov']}/{selected_shot}_light_precomp.mov"
+            name = node.name()
+            if 'EXR' in name:
+                write_path = f"{precomp_dirs['exr']}/{selected_shot}.%04d.exr"
+            elif 'MOV' in name:
+                write_path = f"{precomp_dirs['mov']}/{selected_shot}_light_precomp.mov"
+            else:
+                continue
             node.knob('file').setValue(write_path)
             nuke.tprint(f"Updated Write node path: {write_path}")
 
