@@ -24,7 +24,10 @@ def _get_shot_info():
         nuke.message("Script name doesn't match expected pattern (ep##_sq##_sh##_v##).")
         return None
 
-    ep, sq, sh, ver = match.groups()
+    ep = match.group(1) 
+    sq = match.group(2)
+    sh = match.group(3) 
+    
     shot_name = f"{ep}_{sq}_{sh}"
     return ep, sq, sh, shot_name
 
