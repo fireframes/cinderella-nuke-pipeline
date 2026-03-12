@@ -1,6 +1,6 @@
 # SPDX‑License‑Identifier: Apache‑2.0
 # shot_manager.py – Main module file v0.1
-# Copyright © 2025 Maxim Maximov. All rights reserved.
+# Copyright © 2025 Max Jemer. All rights reserved.
 
 import os
 import sys

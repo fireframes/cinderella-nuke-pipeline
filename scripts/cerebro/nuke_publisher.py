@@ -1,6 +1,6 @@
 # SPDX‑License‑Identifier: Apache‑2.0
 # nuke_publisher.py – Nuke to Cerebro publishing module
-# Copyright © 2025 Maxim Maximov. All rights reserved.
+# Copyright © 2025 Max Jemer. All rights reserved.
 
 import os
 import subprocess

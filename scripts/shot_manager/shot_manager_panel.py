@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # shot_manager_panel.py - Qt-based Shot Manager Panel with Navigation
-# Copyright © 2025 Maxim Maximov. All rights reserved.
+# Copyright © 2025 Max Jemer. All rights reserved.
 
 from PySide2 import QtWidgets, QtCore, QtGui
 import os
@@ -329,11 +329,28 @@ class ShotManagerWidget(QtWidgets.QWidget):
         self.open_btn.clicked.connect(self.open_script)
         self.open_comp_dir_btn.clicked.connect(self.open_comp_dir)
         self.import_render_btn.clicked.connect(import_tools.import_render_layers)
+        # self.import_render_btn.clicked.connect(self.get_shot_info)
         self.import_template_btn.clicked.connect(import_tools.import_template)
         self.open_precomp_btn.clicked.connect(self.open_precomp)
         self.create_precomp_btn.clicked.connect(self.create_precomp)
         self.open_precomp_dir_btn.clicked.connect(self.open_precomp_dir)
         self.publish_to_cerebro_btn.clicked.connect(self.publish_shot)
+    
+    def get_shot_info(self):
+        shot_name = self.all_shots[self.current_shot_index]
+        nuke.tprint(f"Importing from shot: {shot_name}")
+
+        match = re.match(r"(ep\d+)_?(sq\d+)_?(sh\d+)", shot_name, re.IGNORECASE)
+        if not match:
+            nuke.message("Script name doesn't match expected pattern (ep##_sq##_sh##).")
+            return None
+
+        ep = match.group(1) 
+        sq = match.group(2)
+        sh = match.group(3) 
+        
+        return ep, sq, sh, shot_name
+
 
     def initialize_data(self):
         if not self.load_from_cache():
@@ -1023,6 +1040,10 @@ class ShotManagerWidget(QtWidgets.QWidget):
 
         nuke.scriptSaveAs(script_path)
         nuke.tprint(f"Created initial light precomp (v01): {script_path}")
+
+        # Import render layers to check if something's missing
+        # import_tools.import_render_layers()
+
         # self.update_cerebro_status_to_inprogress(selected_shot)
 
     def publish_shot(self):

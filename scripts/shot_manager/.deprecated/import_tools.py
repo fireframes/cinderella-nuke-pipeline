@@ -60,9 +60,8 @@ def import_camera(shot_name=None):
 
     return cam
 
-def import_render_layers(shot_info=None):
-    if shot_info == None:
-        shot_info = _get_shot_info()
+def import_render_layers():
+    shot_info = _get_shot_info()
     if not shot_info:
         return None
     ep, sq, sh, shot_name = shot_info

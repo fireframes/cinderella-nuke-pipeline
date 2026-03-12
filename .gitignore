@@ -12,6 +12,10 @@
 # Python cache
 *.pyc
 
+# Python reqs
+requirements.txt
+scripts/site-packages
+
 # Maybe later
 ~gizmos
 ~toolsets
