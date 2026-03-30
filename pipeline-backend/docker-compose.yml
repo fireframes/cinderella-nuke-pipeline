@@ -1,0 +1,16 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      # Render tree: read-only — the backend scans but never writes here.
+      - ${RENDER_PATH}:/mnt/render:ro
+      # Comp tree: read-write — scripts and thumbnails are created here.
+      - ${COMP_PATH}:/mnt/comp:rw
+      # Cache trees for camera files: read-only.
+      - ${CACHE_PATH_NEW}:/mnt/cache_new:ro
+      - ${CACHE_PATH_OLD}:/mnt/cache_old:ro
+    restart: unless-stopped
