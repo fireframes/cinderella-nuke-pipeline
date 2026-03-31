@@ -2,6 +2,10 @@ import nuke
 import os
 import re
 
+from ..config.config_loader import get_project_config
+
+COMP_PATH = get_project_config().get("server_comp_path", "")
+
 
 def update_write_path():
     sel = nuke.selectedNode()
@@ -30,7 +34,7 @@ def update_write_path():
         return
 
     ep, sq, sh = match.groups()
-    new_path_base = f"//192.168.99.202/prj/cinderella/render/{ep}/{sq}/{sh}/comp/{format}"
+    new_path_base = f"{COMP_PATH}/{ep}/{sq}/{sh}/comp/{format}"
 
     if format == 'exr':
         new_filename = f"{ep}_{sq}_{sh}.%04d.exr"

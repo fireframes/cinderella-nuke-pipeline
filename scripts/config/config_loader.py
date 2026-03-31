@@ -7,11 +7,11 @@ try:
 except ImportError:
     NUKE_AVAILABLE = False
 
-CONFIG_FILE = os.path.join(os.path.dirname(__file__), "cinderella_config.json")
+CONFIG_FILE = os.path.join(os.path.dirname(__file__), "project_config.json")
 with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
     CONFIG = json.load(f)
 
-def get_project_config(prj_name="cinderella"):
+def get_project_config(prj_name="project"):
     prj_config = CONFIG["projects"][prj_name]
     return prj_config
 

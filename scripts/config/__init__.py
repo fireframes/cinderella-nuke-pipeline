@@ -1,7 +1,7 @@
 """
-Cinderella Configuration System
+Pipeline Configuration System
 
-This module provides access to the configuration system for the Cinderella Nuke tools.
+This module provides access to the configuration system for the Nuke pipeline tools.
 """
 
 from .config_loader import (

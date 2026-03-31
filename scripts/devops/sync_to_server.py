@@ -4,17 +4,17 @@ import subprocess
 import json
 import hashlib
 
-CONFIG_FILE = os.path.join(os.path.dirname(__file__), "../config/cinderella_config.json")
+CONFIG_FILE = os.path.join(os.path.dirname(__file__), "../config/project_config.json")
 with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
     config = json.load(f)
 
-nuke_dev_path = config['projects']['cinderella']['tools']['dev']
-nuke_prod_path = config['projects']['cinderella']['tools']['prod']
+nuke_dev_path = config['projects']['project']['tools']['dev']
+nuke_prod_path = config['projects']['project']['tools']['prod']
 dev_tools_path = nuke_dev_path.replace("/", "\\")
 prod_tools_path = nuke_prod_path.replace("/", "\\")
 
 ignore_list = [".gitignore", "scripts/devops/sync_to_server.py", "scripts/devops/switch_nuke_mode.ps1", "README.md"]
-extra_list = ["scripts/config/cinderella_config.json"]
+extra_list = ["scripts/config/project_config.json"]
 
 def get_file_hash(filepath):
     """Calculate MD5 hash of a file to verify content equality."""

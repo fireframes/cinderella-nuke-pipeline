@@ -164,7 +164,8 @@ def construct_cerebro_task_url(shot_name):
     sq_num = int(sq)
     sh_num = int(sh)
 
-    task_url = f"/Cinderella/Prod/ep{ep_num:02d}/sq{sq_num:02d}/sh{sh_num:03d}/compos"
+    url_template = config.get("cerebro_task_url_template", "/MyShow/Prod/ep{ep:02d}/sq{sq:02d}/sh{sh:03d}/compos")
+    task_url = url_template.format(ep=ep_num, sq=sq_num, sh=sh_num)
     nuke.tprint(f"Constructed Cerebro task URL: {task_url}")
 
     return task_url

@@ -1,4 +1,4 @@
-# Cinderella — Nuke Pipeline Tools
+# Nuke Pipeline Tools
 
 A compositing pipeline toolkit built for **Foundry Nuke**, centered around the **Shot Manager panel** — a PySide2 dock widget that gives artists a full shot navigation, script management, and production tracking interface directly inside the compositor.
 
@@ -50,7 +50,7 @@ The panel never touches the filesystem or the tracker directly. Every data call 
 ## Repository Structure
 
 ```
-cinderella/
+nuke-pipeline-tools/
 ├── python/                         # v2 Nuke-side tools (active)
 │   ├── shot_manager/
 │   │   ├── shot_manager_panel.py   # PySide2 Shot Manager panel
@@ -122,8 +122,8 @@ cinderella/
 ### 1. Clone and configure
 
 ```bash
-git clone <repo> cinderella
-cd cinderella/pipeline-backend
+git clone <repo> nuke-pipeline-tools
+cd nuke-pipeline-tools/pipeline-backend
 cp .env.example .env
 ```
 

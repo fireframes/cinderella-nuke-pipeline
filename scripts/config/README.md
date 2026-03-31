@@ -1,14 +1,14 @@
-# Cinderella Configuration System
+# Pipeline Configuration System
 
-This directory contains the configuration system for the Cinderella Nuke tools.
+This directory contains the configuration system for the Nuke pipeline tools.
 
 ## Configuration Files
 
-- `cinderella_config.json`: This is your local configuration file. It contains your specific settings and is not committed to git.
+- `project_config.json`: This is your local configuration file. It contains your specific settings and is not committed to git.
 
 ## Setup
 
-Edit `cinderella_config.json` to set your local paths and preferences.
+Edit `project_config.json` to set your local paths and preferences.
 
 ## Configuration Structure
 
@@ -21,5 +21,5 @@ The configuration file contains:
 
 ## Updating
 
-When pulling updates from git, your local `cinderella_config.json` will be preserved. 
+When pulling updates from git, your local `project_config.json` will be preserved.
 If new configuration options are added to the template, you'll need to manually add them to your local configuration.
