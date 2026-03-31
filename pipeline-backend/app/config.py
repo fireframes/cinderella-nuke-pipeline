@@ -77,21 +77,40 @@ class Settings(BaseSettings):
     SHOT_CAM_FILENAME: str = "shot_camera.abc"
 
     # -----------------------------------------------------------------------
-    # Cerebro
+    # Production tracker (ShotGrid, ftrack, etc.)
+    # -----------------------------------------------------------------------
+
+    # Which tracker to use.  Supported values: "shotgrid", "ftrack", "cerebro", "".
+    # Leave empty to disable tracker endpoints (they will return 503).
+    TRACKER_BACKEND: str = ""
+
+    # Tracker server URL, e.g. https://mystudio.shotgrid.autodesk.com
+    TRACKER_URL: str = ""
+
+    # Script / bot name for API auth.
+    #   ShotGrid: script name created in Admin > Scripts
+    #   ftrack:   API user email
+    TRACKER_SCRIPT_NAME: str = ""
+
+    # API key for the script / bot user.
+    TRACKER_API_KEY: str = ""
+
+    # Project name as it appears in the tracker (exact string match).
+    TRACKER_PROJECT: str = ""
+
+    # Optional: filter tasks by step / type name, e.g. "Comp".
+    # Leave empty to return all tasks linked to the shot.
+    TRACKER_TASK_TYPE: str = ""
+
+    # -----------------------------------------------------------------------
+    # Cerebro (used when TRACKER_BACKEND=cerebro)
     # -----------------------------------------------------------------------
     CEREBRO_SERVER: str = ""
     CEREBRO_CARGADOR_ADDRESS: str = ""
     CEREBRO_CARGADOR_NATIVE_PORT: int = 7779
     CEREBRO_CARGADOR_HTTP_PORT: int = 7780
-
-    # Path to a JSON file containing {"name": "...", "pass": "..."}.
-    CEREBRO_ACCOUNT_PATH: str = ""
-
-    # Template for constructing the Cerebro task URL from shot groups.
-    # Use Python format-string syntax with the same named groups as
-    # SHOT_PATTERN, converted to int for zero-padded formatting.
-    # Example: "/{project}/Prod/ep{ep:02d}/sq{sq:02d}/sh{sh:03d}/compos"
-    CEREBRO_TASK_URL_TEMPLATE: str = ""
+    CEREBRO_ACCOUNT_PATH: str = ""  # Path to JSON file: {"name": "...", "pass": "..."}
+    CEREBRO_TASK_URL_TEMPLATE: str = ""  # e.g. /MyShow/Prod/ep{ep:02d}/sq{sq:02d}/sh{sh:03d}/compos
 
     # -----------------------------------------------------------------------
     # Nuke script templates

@@ -10,15 +10,18 @@ try:
 except ImportError:
     nuke.tprint("Could not import Pixelfudger menu")
 
-# Adds scripts directory to Python path
-scripts_path = os.path.join(os.path.dirname(__file__), "scripts")
-if scripts_path not in sys.path:
-    sys.path.append(scripts_path)
+# Ensure repo root is on sys.path so 'python' package imports resolve correctly
+_repo_root = os.path.dirname(__file__)
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
 
-from scripts import shot_manager
-from scripts import tools
-from scripts import cerebro
-from scripts import deadline
+from python import shot_manager
+from python import tools
+from python import deadline
+from python import backend_startup
+
+# Start the pipeline backend in the background (non-blocking)
+backend_startup.ensure_backend_running()
 
 # Set up paths
 nuke_root = os.path.dirname(__file__)

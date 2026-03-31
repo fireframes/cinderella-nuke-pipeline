@@ -105,6 +105,46 @@ def import_render_layers(shot_detail=None):
         backdrop['bdwidth'].setValue(backdrop['bdwidth'].value() + 20)
 
 
+def import_from_selected_write():
+    try:
+        write_node = nuke.selectedNode()
+        if write_node.Class() != 'Write':
+            nuke.message("Please select a Write node.")
+            return None
+    except ValueError:
+        nuke.message("Please select a Write node.")
+        return None
+
+    file_path = write_node['file'].value()
+    if not file_path:
+        nuke.message(f"Write node '{write_node.name()}' has no file path set.")
+        return None
+
+    file_dir = os.path.dirname(file_path)
+    if not os.path.exists(file_dir):
+        nuke.message(f"Directory does not exist: {file_dir}")
+        return None
+
+    file_list = nuke.getFileNameList(file_dir)
+    allowed_extensions = ('.exr', '.mov', '.png', '.jpg', '.jpeg')
+    valid_media_paths = []
+
+    for sequence_string in file_list:
+        filename_part = sequence_string.split(' ')[0]
+        if filename_part.lower().endswith(allowed_extensions):
+            full_path = os.path.join(file_dir, sequence_string).replace('\\', '/')
+            valid_media_paths.append(full_path)
+
+    if not valid_media_paths:
+        nuke.message(f"No valid media found in directory:\n{file_dir}")
+        return None
+
+    read_node = nuke.createNode("Read", inpanel=False)
+    read_node['file'].fromUserText(valid_media_paths[-1])
+    read_node.autoplace()
+    return read_node
+
+
 def import_template():
     # Template path is managed by the backend config; fetch it via health/config
     # or keep a local fallback. For now, attempt a best-effort local lookup.

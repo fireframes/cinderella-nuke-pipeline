@@ -2,7 +2,7 @@
 PipelineClient — thin HTTP wrapper around the Shot Manager backend API.
 
 The panel instantiates this once and calls it everywhere it previously called
-filesystem or Cerebro methods directly.  BASE_URL is read from the environment
+filesystem or tracker methods directly.  BASE_URL is read from the environment
 variable PIPELINE_BASE_URL (default: http://localhost:8000) so a studio can
 point all artists at a shared server without changing any code.
 
@@ -165,34 +165,34 @@ class PipelineClient:
         return self._post(f"/shots/{shot_id}/precomp-script")
 
     # -----------------------------------------------------------------------
-    # Cerebro
+    # Production tracker (ShotGrid, ftrack, etc.)
     # -----------------------------------------------------------------------
 
-    def get_cerebro_statuses(self) -> list[dict]:
-        """Return all Cerebro statuses as [{id, name, color}, ...]."""
-        return self._get("/cerebro/statuses") or []
+    def get_tracker_statuses(self) -> list[dict]:
+        """Return all tracker statuses as [{id, name, color}, ...]."""
+        return self._get("/tracker/statuses") or []
 
-    def get_cerebro_tasks(self, shot_id: str) -> list[dict]:
-        """Return Cerebro tasks for *shot_id*."""
-        return self._get(f"/cerebro/shots/{shot_id}/tasks") or []
+    def get_tracker_tasks(self, shot_id: str) -> list[dict]:
+        """Return tracker tasks for *shot_id*."""
+        return self._get(f"/tracker/shots/{shot_id}/tasks") or []
 
-    def set_cerebro_status(self, shot_id: str, task_id: int, status_id: int) -> None:
-        """Set a Cerebro task status."""
+    def set_tracker_status(self, shot_id: str, task_id: str, status_id: str) -> None:
+        """Set a task status in the production tracker."""
         self._post(
-            f"/cerebro/shots/{shot_id}/status",
+            f"/tracker/shots/{shot_id}/status",
             json={"task_id": task_id, "status_id": status_id},
         )
 
-    def add_cerebro_report(
+    def add_tracker_report(
         self,
         shot_id: str,
-        task_id: int,
+        task_id: str,
         message: str,
         preview_path: Optional[str] = None,
         scene_path: Optional[str] = None,
         work_time: Optional[int] = None,
     ) -> None:
-        """Add a report (and optional attachments) to a Cerebro task."""
+        """Add a report (and optional attachments) to a tracker task."""
         body: dict[str, Any] = {"task_id": task_id, "message": message}
         if preview_path is not None:
             body["preview_path"] = preview_path
@@ -200,14 +200,14 @@ class PipelineClient:
             body["scene_path"] = scene_path
         if work_time is not None:
             body["work_time"] = work_time
-        self._post(f"/cerebro/shots/{shot_id}/report", json=body)
+        self._post(f"/tracker/shots/{shot_id}/report", json=body)
 
     # -----------------------------------------------------------------------
     # Health
     # -----------------------------------------------------------------------
 
     def health(self) -> dict:
-        """Return {status, render_path_ok, cerebro_ok, detail}."""
+        """Return {status, render_path_ok, tracker_ok, detail}."""
         return self._get("/health")
 
     def is_reachable(self) -> bool:

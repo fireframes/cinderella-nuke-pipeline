@@ -231,8 +231,8 @@ class ShotManagerWidget(QtWidgets.QWidget):
 
         publish_group = QtWidgets.QGroupBox("Publish")
         publish_layout = QtWidgets.QVBoxLayout()
-        self.publish_to_cerebro_btn = QtWidgets.QPushButton("Publish to Cerebro")
-        publish_layout.addWidget(self.publish_to_cerebro_btn)
+        self.publish_to_tracker_btn = QtWidgets.QPushButton("Publish to Tracker")
+        publish_layout.addWidget(self.publish_to_tracker_btn)
         publish_group.setLayout(publish_layout)
 
         light_publish_group.addWidget(light_group)
@@ -266,7 +266,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
         self.open_precomp_btn.clicked.connect(self.open_precomp)
         self.create_precomp_btn.clicked.connect(self.create_precomp)
         self.open_precomp_dir_btn.clicked.connect(self.open_precomp_dir)
-        self.publish_to_cerebro_btn.clicked.connect(self.publish_shot)
+        self.publish_to_tracker_btn.clicked.connect(self.publish_shot)
 
     # -----------------------------------------------------------------------
     # Data initialisation
@@ -611,7 +611,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
             if not nuke.ask(f"Script already exists:\n{script_path}\n\nOpen it?"):
                 return
 
-        self._update_cerebro_status_to_inprogress(self.shot_context)
+        self._update_tracker_status_to_inprogress(self.shot_context)
         try:
             nuke.scriptOpen(script_path)
             nuke.tprint(f"Opened comp script: {script_path}")
@@ -644,7 +644,7 @@ class ShotManagerWidget(QtWidgets.QWidget):
         )
         script_path = os.path.join(nk_dir, recent_script)
 
-        self._update_cerebro_status_to_inprogress(self.shot_context)
+        self._update_tracker_status_to_inprogress(self.shot_context)
         try:
             nuke.scriptOpen(script_path)
         except RuntimeError as e:
@@ -735,18 +735,18 @@ class ShotManagerWidget(QtWidgets.QWidget):
         self._open_directory(detail["precomp_path"])
 
     # -----------------------------------------------------------------------
-    # Actions — Cerebro
+    # Actions — Production tracker
     # -----------------------------------------------------------------------
 
-    def _update_cerebro_status_to_inprogress(self, shot_id):
-        """Set Cerebro task to in_progress if it is currently to_fix or ready_fw."""
-        nuke.tprint(f"Attempting Cerebro status update for: {shot_id}")
+    def _update_tracker_status_to_inprogress(self, shot_id):
+        """Set tracker task to in_progress if it is currently to_fix or ready_fw."""
+        nuke.tprint(f"Attempting tracker status update for: {shot_id}")
         try:
-            tasks = self.client.get_cerebro_tasks(shot_id)
+            tasks = self.client.get_tracker_tasks(shot_id)
             if not tasks:
-                nuke.tprint(f"Cerebro: no tasks found for {shot_id}")
+                nuke.tprint(f"Tracker: no tasks found for {shot_id}")
                 return
-            statuses = self.client.get_cerebro_statuses()
+            statuses = self.client.get_tracker_statuses()
             status_by_name = {s["name"]: s["id"] for s in statuses}
 
             ready_fw_id = status_by_name.get("ready_fw")
@@ -754,18 +754,18 @@ class ShotManagerWidget(QtWidgets.QWidget):
             in_progress_id = status_by_name.get("in_progress")
 
             if in_progress_id is None:
-                nuke.tprint("Cerebro: could not find 'in_progress' status — skipping update")
+                nuke.tprint("Tracker: could not find 'in_progress' status — skipping update")
                 return
 
             for task in tasks:
                 current = task.get("status_id")
                 if current in (ready_fw_id, to_fix_id):
-                    self.client.set_cerebro_status(shot_id, task["id"], in_progress_id)
-                    nuke.tprint(f"Cerebro: {shot_id} status updated to 'in progress'")
+                    self.client.set_tracker_status(shot_id, task["id"], in_progress_id)
+                    nuke.tprint(f"Tracker: {shot_id} status updated to 'in progress'")
                 else:
-                    nuke.tprint(f"Cerebro: status update not required (current: {current})")
+                    nuke.tprint(f"Tracker: status update not required (current: {current})")
         except PipelineError as exc:
-            nuke.tprint(f"Cerebro update skipped: {exc}")
+            nuke.tprint(f"Tracker update skipped: {exc}")
 
     def publish_shot(self):
         if not self.shot_context:
@@ -781,9 +781,9 @@ class ShotManagerWidget(QtWidgets.QWidget):
             return
 
         try:
-            tasks = self.client.get_cerebro_tasks(self.shot_context)
+            tasks = self.client.get_tracker_tasks(self.shot_context)
             if not tasks:
-                nuke.message(f"No Cerebro task found for {self.shot_context}.")
+                nuke.message(f"No tracker task found for {self.shot_context}.")
                 return
             task_id = tasks[0]["id"]
 
@@ -794,16 +794,16 @@ class ShotManagerWidget(QtWidgets.QWidget):
             except PipelineError:
                 preview_path = None
 
-            self.client.add_cerebro_report(
+            self.client.add_tracker_report(
                 self.shot_context,
                 task_id=task_id,
                 message=comment,
                 preview_path=preview_path,
                 work_time=work_time,
             )
-            nuke.message(f"Successfully published {self.shot_context} to Cerebro")
+            nuke.message(f"Successfully published {self.shot_context} to tracker")
         except PipelineError as exc:
-            nuke.message(f"Cerebro publish failed:\n{exc}")
+            nuke.message(f"Tracker publish failed:\n{exc}")
 
     def _choose_work_time(self):
         WORK_TIME_OPTIONS = [

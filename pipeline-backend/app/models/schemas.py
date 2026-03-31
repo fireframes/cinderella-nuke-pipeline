@@ -57,34 +57,34 @@ class ShotDetail(ShotModel):
 
 
 # ---------------------------------------------------------------------------
-# Cerebro
+# Production tracker (ShotGrid, ftrack, etc.)
 # ---------------------------------------------------------------------------
 
 class StatusModel(BaseModel):
-    """A Cerebro task status."""
+    """A task status from the production tracker."""
 
-    id: int
+    id: str                   # Tracker-native ID: status code (ShotGrid) or UUID (ftrack)
     name: str
-    color: Optional[str] = None  # Hex color string if provided by Cerebro
+    color: Optional[str] = None
 
 
 class TaskModel(BaseModel):
-    """A Cerebro task associated with a shot."""
+    """A task associated with a shot in the production tracker."""
 
-    id: int
+    id: str                       # Tracker-native task ID
     name: str
-    status_id: int                   # Effective (calculated) status ID
+    status_id: str                # Tracker-native status ID
     status_name: Optional[str] = None
-    url: str                         # Cerebro task URL, e.g. "/MyShow/ep01/.../compos"
+    url: Optional[str] = None     # Task URL if the tracker provides one
 
 
 class SetStatusRequest(BaseModel):
-    task_id: int
-    status_id: int
+    task_id: str
+    status_id: str
 
 
 class AddReportRequest(BaseModel):
-    task_id: int
+    task_id: str
     message: str
     preview_path: Optional[str] = None  # Path to .mov or image to attach
     scene_path: Optional[str] = None    # Path to .nk scene to attach
@@ -137,5 +137,5 @@ class HealthResponse(BaseModel):
 
     status: str               # "ok" or "degraded"
     render_path_ok: bool
-    cerebro_ok: bool
+    tracker_ok: bool
     detail: Optional[str] = None
